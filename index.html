@@ -3,116 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>সমাজ সেবা সংগঠন</title>
+<title>সমাজ সেবা – Home</title>
 
 <style>
-*{
-  box-sizing:border-box;
+:root{
+  --bg:#f4f6f8;
+  --text:#000;
+  --navbar:#0d803f;
+  --card-bg:#fff;
+  --shadow:rgba(0,0,0,.1);
+}
+body{
   margin:0;
-  padding:0;
-}
-
-html,body{
-  width:100%;
-  overflow-x:hidden;
-  font-family:Segoe UI, Arial, sans-serif;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
   text-align:justify;
-  background:#f4f7f6;
-  color:#222;
+  overflow-x:hidden;
 }
-
-/* ===== DARK MODE ===== */
 .dark-mode{
-  background:#121212;
-  color:#eee;
-}
-.dark-mode section,
-.dark-mode .box{
-  background:#1e1e1e;
+  --bg:#121212;
+  --text:#e0e0e0;
+  --navbar:#1b5e20;
+  --card-bg:#1e1e1e;
+  --shadow:rgba(0,0,0,.5);
 }
 
 /* ===== NAVBAR ===== */
 .navbar{
   width:100%;
-  background:#008C44;
+  background:var(--navbar);
   color:#fff;
-  padding:12px 16px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
+  padding:10px 16px;
+  box-sizing:border-box;
 }
-
-.nav-left{
+.brand{
   display:flex;
   align-items:center;
   gap:10px;
 }
-
-.nav-left img{
+.brand img{
   width:45px;
   height:45px;
   border-radius:50%;
 }
-
-.nav-title h1{
+.brand h1{
+  margin:0;
   font-size:20px;
 }
-.nav-title span{
-  font-size:13px;
+.brand span{
+  font-size:12px;
+  opacity:.9;
 }
-
-.nav-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-#modeToggle,
-#menuToggle{
-  cursor:pointer;
-  font-size:20px;
-  background:#fff;
-  color:#000;
-  padding:6px 10px;
-  border-radius:6px;
-}
-
-/* ===== NAV LINKS ===== */
 .nav-links{
-  width:100%;
   display:flex;
-  justify-content:center;
-  gap:20px;
-  background:#006b34;
-  padding:10px;
+  gap:14px;
 }
-
 .nav-links a{
   color:#fff;
   text-decoration:none;
-  font-weight:600;
+  font-weight:bold;
 }
-
 .nav-links a.active{
-  border-bottom:2px solid #fff;
+  text-decoration:underline;
 }
 
-/* ===== MOBILE MENU ===== */
-@media(max-width:768px){
-  .nav-links{
-    display:none;
-    flex-direction:column;
-    text-align:center;
-  }
-  .nav-links.show{
-    display:flex;
-  }
+/* mobile menu */
+.menu-btn{
+  display:none;
+  font-size:22px;
+  cursor:pointer;
 }
 
 /* ===== BANNER ===== */
 .banner{
   width:100%;
+  max-width:1200px;
   height:260px;
+  margin:8px auto;
+  border-radius:8px;
   overflow:hidden;
 }
 .banner img{
@@ -121,132 +93,118 @@ html,body{
   object-fit:cover;
 }
 
-/* ===== SECTIONS ===== */
-section{
-  width:100%;
+/* ===== CONTENT ===== */
+.container{
   max-width:1200px;
-  margin:20px auto;
-  padding:16px;
+  margin:auto;
+  padding:10px;
 }
-
-.flex{
+.row{
   display:flex;
-  gap:16px;
+  gap:10px;
 }
-@media(max-width:768px){
-  .flex{
-    flex-direction:column;
-  }
-}
-
-.box{
+.section{
   flex:1;
-  background:#fff;
-  padding:16px;
-  border-radius:10px;
+  background:var(--card-bg);
+  padding:12px;
+  border-radius:8px;
+  box-shadow:0 2px 6px var(--shadow);
+}
+.notice{
+  margin-top:15px;
+  background:var(--card-bg);
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 2px 6px var(--shadow);
 }
 
 /* ===== ABOUT ===== */
-.about h3{
-  margin-bottom:8px;
+#about{
+  margin-top:20px;
+  background:var(--card-bg);
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 2px 6px var(--shadow);
 }
 
-/* ===== FOOTER ===== */
-footer{
-  background:#008C44;
-  color:#fff;
-  padding:14px;
-  text-align:center;
-}
-footer a{
-  color:#fff;
-  font-weight:bold;
-  text-decoration:none;
-}
-
-/* ===== MOBILE FONT BIGGER ===== */
+/* ===== MOBILE ===== */
 @media(max-width:768px){
-  body{
-    font-size:18px;
+  body{font-size:17px;}
+  .row{flex-direction:column;}
+  .nav-links{
+    position:absolute;
+    top:60px;
+    right:10px;
+    background:var(--navbar);
+    flex-direction:column;
+    padding:10px;
+    border-radius:8px;
+    display:none;
   }
-  .nav-title h1{
-    font-size:18px;
-  }
+  .nav-links.show{display:flex;}
+  .menu-btn{display:block;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== HEADER ===== -->
+<!-- NAVBAR -->
 <div class="navbar">
-  <div class="nav-left">
-    <img src="https://via.placeholder.com/100">
-    <div class="nav-title">
+  <div class="brand">
+    <img src="https://via.placeholder.com/50">
+    <div>
       <h1>সমাজ সেবা সংগঠন</h1>
       <span>সেবা, সহায়তা ও মানবতা</span>
     </div>
   </div>
 
-  <div class="nav-right">
-    <span id="modeToggle">🌓</span>
-    <span id="menuToggle">☰</span>
+  <div class="menu-btn" onclick="toggleMenu()">⋮</div>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#" class="active">Home</a>
+    <a href="#blood">Blood Donor</a>
+    <a href="#notice">Notice</a>
+    <a href="#jobs">Jobs</a>
+    <a href="#accounts">Accounts</a>
+    <a href="#about">About</a>
+    <!-- ✅ এখানেই Admin Panel যোগ করা হয়েছে -->
+    <a href="admin.html">Admin Panel</a>
   </div>
 </div>
 
-<div class="nav-links" id="navLinks">
-  <a class="active">Home</a>
-  <a>Blood</a>
-  <a>Notice</a>
-  <a>Jobs</a>
-  <a>Accounts</a>
-  <a>About</a>
-</div>
-
-<!-- ===== BANNER ===== -->
+<!-- BANNER -->
 <div class="banner">
-  <img id="bannerImg" src="https://picsum.photos/1200/400?1">
+  <img id="bannerImg" src="https://via.placeholder.com/1200x300">
 </div>
 
-<!-- ===== MAIN INFO ===== -->
-<section>
-  <div class="flex">
-    <div class="box">
+<div class="container">
+
+  <div class="row">
+    <div class="section">
       <h3>এলাকার পরিচিতি</h3>
-      <p>
-        এটি একটি সমাজ সেবা মূলক এলাকা যেখানে মানুষের কল্যাণে বিভিন্ন কার্যক্রম পরিচালিত হয়।
-      </p>
+      <p>এই এলাকাটি একটি সমাজসেবা ভিত্তিক এলাকা যেখানে রক্তদান, জরুরি সহায়তা ও সামাজিক কার্যক্রম পরিচালিত হয়।</p>
     </div>
 
-    <div class="box">
+    <div class="section">
       <h3>জরুরি নম্বর</h3>
-      <p>📞 999</p>
-      <p>📞 017xxxxxxxx</p>
+      <ul>
+        <li>হাসপাতাল: 0123456789</li>
+        <li>এম্বুলেন্স: 0198765432</li>
+      </ul>
     </div>
   </div>
-</section>
 
-<!-- ===== TODAY NOTICE ===== -->
-<section>
-  <div class="box">
-    <h3>আজকের জরুরি নোটিশ</h3>
-    <p>
-      আজ বিকাল ৪টায় জরুরি সভা অনুষ্ঠিত হবে।
-    </p>
+  <div class="notice" id="notice">
+    <h3>আজকের নোটিশ</h3>
+    <p>আজ কোনো জরুরি নোটিশ নেই।</p>
   </div>
-</section>
 
-<!-- ===== ABOUT ===== -->
-<section class="about">
-  <div class="box">
-    <h3>সংগঠনের পরিচিতি</h3>
-    <p>
-      এই সংগঠনটি স্বেচ্ছাসেবকদের মাধ্যমে সমাজের বিভিন্ন মানবিক কাজ পরিচালনা করে।
-    </p>
-
-    <h3>ওয়েবসাইট ডিজাইনার</h3>
-    <p>
-      Md. Shahin Alam  
+  <div id="about">
+    <h2>আমাদের সম্পর্কে</h2>
+    <p><strong>এলাকার পরিচিতি:</strong> সমাজসেবামূলক কার্যক্রম পরিচালিত হয়।</p>
+    <p><strong>সংগঠনের পরিচিতি:</strong> স্থানীয় মানুষের কল্যাণে নিবেদিত একটি সংগঠন।</p>
+    <p><strong>ওয়েবসাইট ডিজাইনার:</strong> Md. Shahin Alam  
       <br>
       Facebook:
       <a href="https://www.facebook.com/mdshahinalam1414/" target="_blank">
@@ -254,48 +212,26 @@ footer a{
       </a>
     </p>
   </div>
-</section>
 
-<footer>
-  © 2026 সমাজ সেবা সংগঠন
-</footer>
+</div>
 
 <script>
-/* ===== MENU TOGGLE ===== */
-menuToggle.onclick=()=>{
-  navLinks.classList.toggle("show");
-};
+// mobile menu
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("show");
+}
 
-/* Auto hide menu on touch */
-document.body.addEventListener("click",e=>{
-  if(!e.target.closest(".navbar") && !e.target.closest(".nav-links")){
-    navLinks.classList.remove("show");
+// auto hide menu on outside click
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".navbar")){
+    document.getElementById("navLinks").classList.remove("show");
   }
 });
 
-/* ===== DARK MODE ===== */
+// dark mode persist
 if(localStorage.getItem("mode")==="dark"){
   document.body.classList.add("dark-mode");
 }
-modeToggle.onclick=()=>{
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem(
-    "mode",
-    document.body.classList.contains("dark-mode")?"dark":"light"
-  );
-};
-
-/* ===== BANNER SLIDER ===== */
-let imgs=[
-  "https://picsum.photos/1200/400?1",
-  "https://picsum.photos/1200/400?2",
-  "https://picsum.photos/1200/400?3"
-];
-let i=0;
-setInterval(()=>{
-  i=(i+1)%imgs.length;
-  bannerImg.src=imgs[i];
-},4000);
 </script>
 
 </body>
