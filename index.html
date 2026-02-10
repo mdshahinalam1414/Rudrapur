@@ -41,6 +41,7 @@ body{
   align-items:center;
   padding:10px 20px;
   flex-wrap:wrap;
+  position:relative;
 }
 .navbar-left{
   display:flex;
@@ -65,14 +66,19 @@ body{
   font-size:16px;
   opacity:0.85;
 }
-.navbar a{
+/* Desktop Links */
+.navbar-links{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+.navbar-links a{
   color:white;
   text-decoration:none;
-  margin-left:15px;
   font-weight:bold;
   font-size:18px;
 }
-.navbar a.active{
+.navbar-links a.active{
   text-decoration:underline;
 }
 #modeToggle{
@@ -82,7 +88,14 @@ body{
   border-radius:4px;
   background:var(--btn-bg);
   color:var(--btn-text);
-  margin-left:15px;
+  margin-left:10px;
+}
+/* Mobile toggle button */
+#mobileToggle{
+  display:none;
+  font-size:26px;
+  cursor:pointer;
+  margin-left:10px;
 }
 
 /* Banner Image */
@@ -161,9 +174,24 @@ li{ margin:6px 0; font-size:18px; }
 
 /* Responsive for Mobile */
 @media (max-width:768px){
+  .navbar-links{
+    display:none;
+    flex-direction:column;
+    background:var(--navbar);
+    position:absolute;
+    top:70px;
+    right:10px;
+    border-radius:6px;
+    padding:10px;
+    width:200px;
+    z-index:1000;
+  }
+  #mobileToggle{
+    display:inline-block;
+    color:white;
+  }
   .navbar-left h1{ font-size:22px; }
   .navbar-left span{ font-size:16px; }
-  .navbar a{ font-size:16px; margin-left:10px; margin-top:5px; }
   .banner{ height:180px; }
 
   /* Top Row sections stacked, bigger font */
@@ -194,16 +222,15 @@ li{ margin:6px 0; font-size:18px; }
 <!-- Navbar -->
 <div class="navbar">
   <div class="navbar-left">
-    <!-- Logo -->
     <img id="orgLogo" src="https://via.placeholder.com/50" alt="Logo">
-    <!-- Name & Slogan -->
     <div>
       <h1>সমাজ সেবা সংগঠন</h1>
       <span>সেবা, সহায়তা ও এগিয়ে যাওয়ার شعار</span>
     </div>
   </div>
 
-  <div>
+  <!-- Desktop / Mobile links -->
+  <div class="navbar-links" id="navbarLinks">
     <a href="#" class="active">Home</a>
     <a href="#blood">Blood Donor</a>
     <a href="#notices">Notices</a>
@@ -213,6 +240,9 @@ li{ margin:6px 0; font-size:18px; }
     <a href="admin.html" target="_blank">Admin Panel</a>
     <span id="modeToggle">🌓 Dark/Light</span>
   </div>
+
+  <!-- Mobile 3-dot / hamburger button -->
+  <span id="mobileToggle">☰</span>
 </div>
 
 <!-- Banner / Organization Work Image -->
@@ -258,6 +288,17 @@ document.getElementById("modeToggle").addEventListener("click",()=>{
   document.body.classList.toggle("dark-mode");
 });
 
+// Mobile toggle navbar
+const mobileToggle = document.getElementById("mobileToggle");
+const navbarLinks = document.getElementById("navbarLinks");
+mobileToggle.addEventListener("click", ()=>{
+  if(navbarLinks.style.display === "flex"){
+    navbarLinks.style.display = "none";
+  } else {
+    navbarLinks.style.display = "flex";
+  }
+});
+
 // Emergency Numbers
 fetch(API_URL+"?sheet=emergency")
 .then(res=>res.json())
@@ -275,7 +316,6 @@ fetch(API_URL+"?sheet=notice")
 .then(data=>{
   const today=new Date().toISOString().split("T")[0];
   let todayHTML="";
-
   data.forEach(n=>{
     if(n.date === today){
       const img = n.photo ? `<br><img src="${n.photo}" style="max-width:100%; margin-top:8px; border-radius:6px;">` : "";
@@ -284,7 +324,6 @@ fetch(API_URL+"?sheet=notice")
                   ${img}`;
     }
   });
-
   document.getElementById("todayNotice").innerHTML = todayHTML || "<p>আজকের কোন নোটিশ নেই।</p>";
 });
 
@@ -294,10 +333,8 @@ const bannerImages = [
   "https://via.placeholder.com/1200x250?text=Banner+2",
   "https://via.placeholder.com/1200x250?text=Banner+3"
 ];
-
 let bannerIndex = 0;
 const bannerImgElement = document.getElementById("orgBanner");
-
 setInterval(() => {
   bannerIndex = (bannerIndex + 1) % bannerImages.length;
   bannerImgElement.src = bannerImages[bannerIndex];
