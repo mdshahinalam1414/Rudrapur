@@ -2,6 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>সমাজ সেবা – Home</title>
 <style>
 :root{
@@ -19,7 +20,7 @@ body{
   background:var(--bg);
   color:var(--text);
   transition:0.3s;
-  font-size:16px; /* base font size */
+  font-size:18px; /* base font bigger */
 }
 .dark-mode{
   --bg:#121212;
@@ -58,10 +59,10 @@ body{
 }
 .navbar-left h1{
   margin:0;
-  font-size:24px;
+  font-size:26px;
 }
 .navbar-left span{
-  font-size:14px;
+  font-size:16px;
   opacity:0.85;
 }
 .navbar a{
@@ -69,15 +70,15 @@ body{
   text-decoration:none;
   margin-left:15px;
   font-weight:bold;
-  font-size:16px;
+  font-size:18px;
 }
 .navbar a.active{
   text-decoration:underline;
 }
 #modeToggle{
   cursor:pointer;
-  font-size:14px;
-  padding:4px 10px;
+  font-size:16px;
+  padding:6px 12px;
   border-radius:4px;
   background:var(--btn-bg);
   color:var(--btn-text);
@@ -89,7 +90,7 @@ body{
   width:1200px;
   max-width:100%;
   height:250px;       
-  margin:5px auto;
+  margin:10px auto;
   border-radius:8px;
   overflow:hidden;
   box-shadow:0 2px 6px var(--card-shadow);
@@ -114,8 +115,8 @@ body{
 .top-row .section{
   flex:1 1 48%; /* auto width adjust */
   min-width:0; 
-  padding:12px;
-  font-size:16px;
+  padding:15px;
+  font-size:18px;
   background:var(--card-bg);
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
@@ -123,14 +124,14 @@ body{
 
 /* Emergency List */
 ul{ list-style:none; padding-left:0; margin:0;}
-li{ margin:6px 0; font-size:16px; }
+li{ margin:6px 0; font-size:18px; }
 .call-btn{
   background:var(--btn-bg);
   color:var(--btn-text);
   text-decoration:none;
-  padding:5px 10px;
+  padding:6px 12px;
   border-radius:4px;
-  font-size:15px;
+  font-size:18px;
 }
 
 /* Today's Notice */
@@ -141,7 +142,7 @@ li{ margin:6px 0; font-size:16px; }
   max-width:1200px;
   margin:20px auto;
   box-shadow:0 2px 6px var(--card-shadow);
-  font-size:16px;
+  font-size:18px;
 }
 .notice h3{margin-top:0; color:var(--navbar);}
 
@@ -153,7 +154,7 @@ li{ margin:6px 0; font-size:16px; }
   padding:20px;
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
-  font-size:16px;
+  font-size:18px;
 }
 #about h2{color:var(--navbar);}
 #about p{line-height:1.6;}
@@ -161,9 +162,9 @@ li{ margin:6px 0; font-size:16px; }
 /* Responsive for Mobile */
 @media (max-width:768px){
   .navbar-left h1{ font-size:22px; }
-  .navbar-left span{ font-size:15px; }
+  .navbar-left span{ font-size:16px; }
   .navbar a{ font-size:16px; margin-left:10px; margin-top:5px; }
-  .banner{ height:200px; }
+  .banner{ height:180px; }
 
   /* Top Row sections stacked, bigger font */
   .top-row{
@@ -172,13 +173,13 @@ li{ margin:6px 0; font-size:16px; }
   }
   .top-row .section{
     width:100%; 
-    font-size:20px;  /* larger font */
-    margin-bottom:12px;
+    font-size:20px;  /* bigger font for mobile */
+    margin-bottom:15px;
     line-height:1.5;
   }
 
-  li{ font-size:19px; line-height:1.5; }  /* Emergency list bigger */
-  .call-btn{ font-size:18px; padding:6px 12px; }
+  li{ font-size:20px; line-height:1.5; }  
+  .call-btn{ font-size:20px; padding:8px 14px; }
 
   .notice, #about{
     font-size:20px; 
