@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Donor List</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+html,body{
+  width:100%;
+  overflow-x:hidden;
+  font-family:Segoe UI, Arial, sans-serif;
+  text-align:justify;
+  background:#f4f7f6;
+  color:#222;
+}
+
+/* ===== DARK MODE ===== */
+.dark-mode{background:#121212;color:#eee;}
+.dark-mode section,
+.dark-mode .box{background:#1e1e1e;}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  width:100%;
+  background:#008C44;
+  color:#fff;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left img{width:45px;height:45px;border-radius:50%;}
+.nav-title h1{font-size:20px;}
+.nav-title span{font-size:13px;}
+.nav-right{display:flex;gap:10px;}
+#modeToggle,#menuToggle{
+  cursor:pointer;
+  font-size:20px;
+  background:#fff;
+  color:#000;
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+/* ===== NAV LINKS ===== */
+.nav-links{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  background:#006b34;
+  padding:10px;
+}
+.nav-links a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+}
+.nav-links a.active{border-bottom:2px solid #fff;}
+
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;text-align:center;}
+  .nav-links.show{display:flex;}
+}
+
+/* ===== BANNER ===== */
+.banner{width:100%;height:220px;overflow:hidden;}
+.banner img{width:100%;height:100%;object-fit:cover;}
+
+/* ===== SECTION ===== */
+section{
+  width:100%;
+  max-width:1200px;
+  margin:20px auto;
+  padding:16px;
+}
+.box{
+  background:#fff;
+  padding:16px;
+  border-radius:10px;
+}
+
+/* ===== SEARCH ===== */
+.search-box{
+  width:100%;
+  padding:12px;
+  font-size:16px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-bottom:15px;
+}
+
+/* ===== TABLE ===== */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border-bottom:1px solid #ddd;
+  padding:10px;
+  text-align:left;
+}
+th{background:#008C44;color:#fff;}
+.call-btn{
+  background:#008C44;
+  color:#fff;
+  padding:6px 10px;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  background:#008C44;
+  color:#fff;
+  padding:14px;
+  text-align:center;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  body{font-size:18px;}
+  table{font-size:15px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="navbar">
+  <div class="nav-left">
+    <img src="https://via.placeholder.com/100">
+    <div class="nav-title">
+      <h1>সমাজ সেবা সংগঠন</h1>
+      <span>সেবা, সহায়তা ও মানবতা</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span id="modeToggle">🌓</span>
+    <span id="menuToggle">☰</span>
+  </div>
+</div>
+
+<div class="nav-links" id="navLinks">
+  <a href="index.html">Home</a>
+  <a class="active">Blood</a>
+  <a>Notice</a>
+  <a>Jobs</a>
+  <a>Accounts</a>
+  <a>About</a>
+  <a href="admin.html">Admin Panel</a>
+</div>
+
+<!-- ===== BANNER ===== -->
+<div class="banner">
+  <img src="https://picsum.photos/1200/300?blood">
+</div>
+
+<!-- ===== BLOOD LIST ===== -->
+<section>
+  <div class="box">
+    <h2>🩸 Blood Donor List</h2>
+    <input type="text" id="search" class="search-box"
+      placeholder="নাম / ব্লাড গ্রুপ / ঠিকানা / মোবাইল দিয়ে খুঁজুন">
+
+    <table>
+      <thead>
+        <tr>
+          <th>নাম</th>
+          <th>ঠিকানা</th>
+          <th>Blood Group</th>
+          <th>DOB</th>
+          <th>Call</th>
+        </tr>
+      </thead>
+      <tbody id="bloodList">
+        <tr><td colspan="5">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  © 2026 সমাজ সেবা সংগঠন
+</footer>
+
+<script>
+const API_URL="YOUR_APPS_SCRIPT_URL_HERE";
+
+/* MENU */
+menuToggle.onclick=()=>navLinks.classList.toggle("show");
+document.body.addEventListener("click",e=>{
+  if(!e.target.closest(".navbar") && !e.target.closest(".nav-links")){
+    navLinks.classList.remove("show");
+  }
+});
+
+/* DARK MODE */
+if(localStorage.getItem("mode")==="dark"){
+  document.body.classList.add("dark-mode");
+}
+modeToggle.onclick=()=>{
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem("mode",
+    document.body.classList.contains("dark-mode")?"dark":"light");
+};
+
+/* LOAD BLOOD DATA */
+let donors=[];
+fetch(API_URL+"?sheet=blood")
+.then(res=>res.json())
+.then(data=>{
+  donors=data;
+  render(data);
+});
+
+function render(data){
+  let html="";
+  data.forEach(d=>{
+    html+=`
+    <tr>
+      <td>${d.name}</td>
+      <td>${d.address}</td>
+      <td>${d.blood}</td>
+      <td>${d.dob}</td>
+      <td><a class="call-btn" href="tel:${d.phone}">📞</a></td>
+    </tr>`;
+  });
+  bloodList.innerHTML=html || "<tr><td colspan='5'>No data</td></tr>";
+}
+
+/* SEARCH */
+search.onkeyup=()=>{
+  let q=search.value.toLowerCase();
+  render(donors.filter(d=>
+    d.name.toLowerCase().includes(q) ||
+    d.address.toLowerCase().includes(q) ||
+    d.phone.includes(q) ||
+    d.blood.toLowerCase().includes(q)
+  ));
+};
+</script>
+
+</body>
+</html>
