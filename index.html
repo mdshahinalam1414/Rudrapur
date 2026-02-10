@@ -19,6 +19,7 @@ body{
   background:var(--bg);
   color:var(--text);
   transition:0.3s;
+  font-size:16px; /* base font size */
 }
 .dark-mode{
   --bg:#121212;
@@ -37,7 +38,7 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:8px 20px;
+  padding:10px 20px;
   flex-wrap:wrap;
 }
 .navbar-left{
@@ -57,18 +58,18 @@ body{
 }
 .navbar-left h1{
   margin:0;
-  font-size:22px;
+  font-size:24px;
 }
 .navbar-left span{
-  font-size:13px;
-  opacity:0.8;
+  font-size:14px;
+  opacity:0.85;
 }
 .navbar a{
   color:white;
   text-decoration:none;
   margin-left:15px;
   font-weight:bold;
-  font-size:15px;
+  font-size:16px;
 }
 .navbar a.active{
   text-decoration:underline;
@@ -113,8 +114,8 @@ body{
 .top-row .section{
   flex:0 0 48%;  /* দুইটি section পাশে পাশে */
   min-width:280px; /* mobile safe width */
-  padding:10px;
-  font-size:14px;
+  padding:12px;
+  font-size:16px; /* larger font for mobile readability */
   background:var(--card-bg);
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
@@ -122,24 +123,25 @@ body{
 
 /* Emergency List */
 ul{ list-style:none; padding-left:0; margin:0;}
-li{ margin:5px 0; }
+li{ margin:6px 0; font-size:16px; }
 .call-btn{
   background:var(--btn-bg);
   color:var(--btn-text);
   text-decoration:none;
-  padding:4px 8px;
+  padding:5px 10px;
   border-radius:4px;
-  font-size:13px;
+  font-size:15px;
 }
 
 /* Today's Notice */
 .notice{
   background:var(--card-bg);
-  padding:15px;
+  padding:20px;
   border-radius:8px;
   max-width:1200px;
   margin:20px auto;
   box-shadow:0 2px 6px var(--card-shadow);
+  font-size:16px;
 }
 .notice h3{margin-top:0; color:var(--navbar);}
 
@@ -151,17 +153,21 @@ li{ margin:5px 0; }
   padding:20px;
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
+  font-size:16px;
 }
 #about h2{color:var(--navbar);}
 #about p{line-height:1.6;}
 
 /* Responsive */
 @media (max-width:768px){
-  .navbar-left h1{ font-size:18px; }
-  .navbar-left span{ font-size:11px; }
-  .navbar a{ font-size:14px; margin-left:10px; margin-top:5px; }
+  .navbar-left h1{ font-size:20px; }
+  .navbar-left span{ font-size:13px; }
+  .navbar a{ font-size:15px; margin-left:10px; margin-top:5px; }
   .banner{ height:200px; }
-  .top-row .section{ min-width:250px; }
+  .top-row .section{ min-width:250px; font-size:16px; }
+  li{ font-size:16px; }
+  .call-btn{ font-size:15px; padding:5px 8px; }
+  .notice, #about{ font-size:16px; padding:15px; }
 }
 </style>
 </head>
