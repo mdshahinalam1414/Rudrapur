@@ -14,14 +14,16 @@
   --btn-bg:#0d803f;
   --btn-text:#fff;
 }
-body{
+html, body{
   margin:0;
+  padding:0;
   font-family:Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   transition:0.3s;
   font-size:18px;
-  text-align:justify; /* Body text justified */
+  overflow-x:hidden; /* horizontal scroll off */
+  text-align:justify;
 }
 body * { text-align:justify; } /* সব element justified */
 .dark-mode{
@@ -43,11 +45,8 @@ body * { text-align:justify; } /* সব element justified */
   align-items:center;
   padding:10px 20px;
   flex-wrap:wrap;
-  position:relative;
-  width:100vw; /* full width */
+  width:100%;
   box-sizing:border-box;
-  left:0;
-  top:0;
 }
 .navbar-left{
   display:flex;
@@ -72,6 +71,7 @@ body * { text-align:justify; } /* সব element justified */
   font-size:16px;
   opacity:0.85;
 }
+
 /* Desktop Links */
 .navbar-links{
   display:flex;
@@ -106,9 +106,9 @@ body * { text-align:justify; } /* সব element justified */
 
 /* Banner Image */
 .banner{
-  width:1200px;
-  max-width:100%;
-  height:250px;       
+  width:100%;
+  max-width:1200px;
+  height:250px;
   margin:10px auto;
   border-radius:8px;
   overflow:hidden;
@@ -130,16 +130,18 @@ body * { text-align:justify; } /* সব element justified */
   margin:auto;
   gap:10px;  
   flex-wrap:wrap;
+  box-sizing:border-box;
 }
 .top-row .section{
   flex:1 1 48%;
-  min-width:0; 
+  min-width:0;
   padding:15px;
   font-size:18px;
   background:var(--card-bg);
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
   text-align:justify;
+  box-sizing:border-box;
 }
 
 /* Emergency List */
@@ -164,6 +166,7 @@ li{ margin:6px 0; font-size:18px; }
   box-shadow:0 2px 6px var(--card-shadow);
   font-size:18px;
   text-align:justify;
+  box-sizing:border-box;
 }
 .notice h3{margin-top:0; color:var(--navbar);}
 
@@ -177,16 +180,13 @@ li{ margin:6px 0; font-size:18px; }
   box-shadow:0 2px 6px var(--card-shadow);
   font-size:18px;
   text-align:justify;
+  box-sizing:border-box;
 }
 #about h2{color:var(--navbar);}
 #about p{line-height:1.6;}
 
 /* Responsive for Mobile */
 @media (max-width:768px){
-  .navbar{
-    width:100vw; /* full width */
-    padding:10px 0;
-  }
   .navbar-links{
     display:none;
     flex-direction:column;
@@ -196,7 +196,7 @@ li{ margin:6px 0; font-size:18px; }
     right:0;
     border-radius:0 0 6px 6px;
     padding:10px;
-    width:100vw; /* full width dropdown */
+    width:100%; 
     box-sizing:border-box;
     z-index:1000;
   }
@@ -243,7 +243,6 @@ li{ margin:6px 0; font-size:18px; }
     </div>
   </div>
 
-  <!-- Desktop / Mobile links -->
   <div class="navbar-links" id="navbarLinks">
     <a href="#" class="active">Home</a>
     <a href="#blood">Blood Donor</a>
@@ -255,7 +254,6 @@ li{ margin:6px 0; font-size:18px; }
     <span id="modeToggle">🌓 Dark/Light</span>
   </div>
 
-  <!-- Mobile 3-dot / hamburger button -->
   <span id="mobileToggle">☰</span>
 </div>
 
@@ -304,12 +302,50 @@ document.getElementById("modeToggle").addEventListener("click",()=>{
 const mobileToggle = document.getElementById("mobileToggle");
 const navbarLinks = document.getElementById("navbarLinks");
 mobileToggle.addEventListener("click", ()=>{
-  if(navbarLinks.style.display === "flex"){
-    navbarLinks.style.display = "none";
-  } else {
-    navbarLinks.style.display = "flex";
-  }
+  navbarLinks.style.display = (navbarLinks.style.display==="flex")?"none":"flex";
 });
 
 // Emergency Numbers
-fetch(API_URL+"_
+fetch(API_URL+"?sheet=emergency")
+.then(res=>res.json())
+.then(data=>{
+  let html="";
+  data.forEach(d=>{
+    html+=`<li>${d.name} <a class="call-btn" href="tel:${d.phone}">📞 ${d.phone}</a></li>`;
+  });
+  document.getElementById("emergencyList").innerHTML = html || "No data";
+});
+
+// Today's Notice
+fetch(API_URL+"?sheet=notice")
+.then(res=>res.json())
+.then(data=>{
+  const today=new Date().toISOString().split("T")[0];
+  let todayHTML="";
+  data.forEach(n=>{
+    if(n.date === today){
+      const img = n.photo ? `<br><img src="${n.photo}" style="max-width:100%; margin-top:8px; border-radius:6px;">` : "";
+      todayHTML+=`<h3>📢 ${n.title}</h3>
+                  <p>${n.description}</p>
+                  ${img}`;
+    }
+  });
+  document.getElementById("todayNotice").innerHTML = todayHTML || "<p>আজকের কোন নোটিশ নেই।</p>";
+});
+
+// Banner Slideshow
+const bannerImages = [
+  "https://via.placeholder.com/1200x250?text=Banner+1",
+  "https://via.placeholder.com/1200x250?text=Banner+2",
+  "https://via.placeholder.com/1200x250?text=Banner+3"
+];
+let bannerIndex = 0;
+const bannerImgElement = document.getElementById("orgBanner");
+setInterval(() => {
+  bannerIndex = (bannerIndex + 1) % bannerImages.length;
+  bannerImgElement.src = bannerImages[bannerIndex];
+}, 5000);
+</script>
+
+</body>
+</html>
