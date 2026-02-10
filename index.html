@@ -20,7 +20,7 @@ body{
   background:var(--bg);
   color:var(--text);
   transition:0.3s;
-  font-size:18px; /* base font bigger */
+  font-size:18px;
 }
 .dark-mode{
   --bg:#121212;
@@ -42,6 +42,8 @@ body{
   padding:10px 20px;
   flex-wrap:wrap;
   position:relative;
+  width:100%;
+  box-sizing:border-box;
 }
 .navbar-left{
   display:flex;
@@ -123,10 +125,10 @@ body{
   max-width:1200px;
   margin:auto;
   gap:10px;  
-  flex-wrap:wrap; /* stacked on mobile */
+  flex-wrap:wrap;
 }
 .top-row .section{
-  flex:1 1 48%; /* auto width adjust */
+  flex:1 1 48%;
   min-width:0; 
   padding:15px;
   font-size:18px;
@@ -174,34 +176,39 @@ li{ margin:6px 0; font-size:18px; }
 
 /* Responsive for Mobile */
 @media (max-width:768px){
+  .navbar{
+    width:100%;
+    padding:10px 0;
+  }
   .navbar-links{
     display:none;
     flex-direction:column;
     background:var(--navbar);
     position:absolute;
-    top:70px;
-    right:10px;
-    border-radius:6px;
+    top:60px;
+    right:0;
+    border-radius:0 0 6px 6px;
     padding:10px;
-    width:200px;
+    width:100%;
+    box-sizing:border-box;
     z-index:1000;
   }
   #mobileToggle{
     display:inline-block;
     color:white;
+    margin-right:15px;
   }
   .navbar-left h1{ font-size:22px; }
   .navbar-left span{ font-size:16px; }
   .banner{ height:180px; }
 
-  /* Top Row sections stacked, bigger font */
   .top-row{
     flex-direction:column; 
     padding:10px;
   }
   .top-row .section{
     width:100%; 
-    font-size:20px;  /* bigger font for mobile */
+    font-size:20px;
     margin-bottom:15px;
     line-height:1.5;
   }
@@ -252,13 +259,11 @@ li{ margin:6px 0; font-size:18px; }
 
 <!-- Top Row: Emergency | Area Info -->
 <div class="top-row">
-  <!-- Emergency Numbers -->
   <div class="section" id="emergency-numbers">
     <h3>📞 জরুরি নম্বর</h3>
     <ul id="emergencyList">Loading...</ul>
   </div>
 
-  <!-- Area Info -->
   <div class="section" id="area-info">
     <h3>🌍 area's পরিচিতি</h3>
     <p>
