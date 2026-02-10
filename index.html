@@ -21,8 +21,9 @@ body{
   color:var(--text);
   transition:0.3s;
   font-size:18px;
-  text-align:justify;
+  text-align:justify; /* Body text justified */
 }
+body * { text-align:justify; } /* সব element justified */
 .dark-mode{
   --bg:#121212;
   --text:#e0e0e0;
@@ -43,8 +44,10 @@ body{
   padding:10px 20px;
   flex-wrap:wrap;
   position:relative;
-  width:100%;
+  width:100vw; /* full width */
   box-sizing:border-box;
+  left:0;
+  top:0;
 }
 .navbar-left{
   display:flex;
@@ -181,7 +184,7 @@ li{ margin:6px 0; font-size:18px; }
 /* Responsive for Mobile */
 @media (max-width:768px){
   .navbar{
-    width:100%;
+    width:100vw; /* full width */
     padding:10px 0;
   }
   .navbar-links{
@@ -193,7 +196,7 @@ li{ margin:6px 0; font-size:18px; }
     right:0;
     border-radius:0 0 6px 6px;
     padding:10px;
-    width:100%;
+    width:100vw; /* full width dropdown */
     box-sizing:border-box;
     z-index:1000;
   }
@@ -309,46 +312,4 @@ mobileToggle.addEventListener("click", ()=>{
 });
 
 // Emergency Numbers
-fetch(API_URL+"?sheet=emergency")
-.then(res=>res.json())
-.then(data=>{
-  let html="";
-  data.forEach(d=>{
-    html+=`<li>${d.name} <a class="call-btn" href="tel:${d.phone}">📞 ${d.phone}</a></li>`;
-  });
-  document.getElementById("emergencyList").innerHTML = html || "No data";
-});
-
-// Today's Notice
-fetch(API_URL+"?sheet=notice")
-.then(res=>res.json())
-.then(data=>{
-  const today=new Date().toISOString().split("T")[0];
-  let todayHTML="";
-  data.forEach(n=>{
-    if(n.date === today){
-      const img = n.photo ? `<br><img src="${n.photo}" style="max-width:100%; margin-top:8px; border-radius:6px;">` : "";
-      todayHTML+=`<h3>📢 ${n.title}</h3>
-                  <p>${n.description}</p>
-                  ${img}`;
-    }
-  });
-  document.getElementById("todayNotice").innerHTML = todayHTML || "<p>আজকের কোন নোটিশ নেই।</p>";
-});
-
-// Banner Slideshow
-const bannerImages = [
-  "https://via.placeholder.com/1200x250?text=Banner+1",
-  "https://via.placeholder.com/1200x250?text=Banner+2",
-  "https://via.placeholder.com/1200x250?text=Banner+3"
-];
-let bannerIndex = 0;
-const bannerImgElement = document.getElementById("orgBanner");
-setInterval(() => {
-  bannerIndex = (bannerIndex + 1) % bannerImages.length;
-  bannerImgElement.src = bannerImages[bannerIndex];
-}, 5000);
-</script>
-
-</body>
-</html>
+fetch(API_URL+"_
