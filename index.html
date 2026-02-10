@@ -158,16 +158,33 @@ li{ margin:6px 0; font-size:16px; }
 #about h2{color:var(--navbar);}
 #about p{line-height:1.6;}
 
-/* Responsive */
+/* Responsive for Mobile */
 @media (max-width:768px){
-  .navbar-left h1{ font-size:20px; }
-  .navbar-left span{ font-size:13px; }
-  .navbar a{ font-size:15px; margin-left:10px; margin-top:5px; }
+  .navbar-left h1{ font-size:22px; }
+  .navbar-left span{ font-size:15px; }
+  .navbar a{ font-size:16px; margin-left:10px; margin-top:5px; }
   .banner{ height:200px; }
-  .top-row .section{ width:100%; font-size:18px; margin-bottom:10px; }
-  li{ font-size:17px; }
-  .call-btn{ font-size:16px; padding:6px 10px; }
-  .notice, #about{ font-size:17px; padding:15px; }
+
+  /* Top Row sections stacked, bigger font */
+  .top-row{
+    flex-direction:column; 
+    padding:10px;
+  }
+  .top-row .section{
+    width:100%; 
+    font-size:20px;  /* larger font */
+    margin-bottom:12px;
+    line-height:1.5;
+  }
+
+  li{ font-size:19px; line-height:1.5; }  /* Emergency list bigger */
+  .call-btn{ font-size:18px; padding:6px 12px; }
+
+  .notice, #about{
+    font-size:20px; 
+    padding:15px; 
+    line-height:1.6; 
+  }
 }
 </style>
 </head>
