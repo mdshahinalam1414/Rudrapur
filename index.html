@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>সমাজ সেবা – Home</title>
+
 <style>
 :root{
   --bg:#f4f6f8;
@@ -14,339 +15,276 @@
   --btn-bg:#0d803f;
   --btn-text:#fff;
 }
-html, body{
+
+/* ===== Base ===== */
+html,body{
   margin:0;
   padding:0;
+  width:100%;
+  overflow-x:hidden;
   font-family:Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
-  transition:0.3s;
   font-size:18px;
-  overflow-x:hidden; /* horizontal scroll off */
   text-align:justify;
 }
-body * { text-align:justify; } /* সব element justified */
+body *{ box-sizing:border-box; }
+
+/* ===== Dark Mode ===== */
 .dark-mode{
   --bg:#121212;
   --text:#e0e0e0;
   --navbar:#1b5e20;
   --card-bg:#1e1e1e;
   --card-shadow: rgba(0,0,0,0.5);
-  --btn-bg:#1b5e20;
-  --btn-text:#fff;
 }
 
-/* Navbar */
+/* ===== Navbar ===== */
 .navbar{
+  width:100%;
   background:var(--navbar);
-  color:white;
+  color:#fff;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:10px 20px;
-  flex-wrap:wrap;
-  width:100%;
-  box-sizing:border-box;
+  padding:10px 16px;
+  position:relative;
 }
+
 .navbar-left{
   display:flex;
   align-items:center;
   gap:10px;
 }
 .navbar-left img{
-  width:50px;
-  height:50px;
+  width:46px;
+  height:46px;
   border-radius:50%;
   object-fit:cover;
 }
-.navbar-left div{
-  display:flex;
-  flex-direction:column;
-}
 .navbar-left h1{
   margin:0;
-  font-size:26px;
+  font-size:24px;
 }
 .navbar-left span{
-  font-size:16px;
-  opacity:0.85;
+  font-size:14px;
+  opacity:.9;
 }
 
-/* Desktop Links */
+/* ===== Links ===== */
 .navbar-links{
   display:flex;
-  gap:15px;
+  gap:14px;
   align-items:center;
 }
 .navbar-links a{
-  color:white;
+  color:#fff;
   text-decoration:none;
   font-weight:bold;
-  font-size:18px;
 }
 .navbar-links a.active{
   text-decoration:underline;
 }
+
+.facebook-link::before{ content:"📘 "; }
+
 #modeToggle{
   cursor:pointer;
-  font-size:16px;
-  padding:6px 12px;
+  padding:5px 10px;
+  background:#fff;
+  color:#000;
   border-radius:4px;
-  background:var(--btn-bg);
-  color:var(--btn-text);
-  margin-left:10px;
+  font-size:14px;
 }
-/* Mobile toggle button */
+
+/* ===== Mobile Menu Button ===== */
 #mobileToggle{
   display:none;
   font-size:26px;
   cursor:pointer;
-  margin-left:10px;
 }
 
-/* Banner Image */
+/* ===== Banner ===== */
 .banner{
-  width:100%;
   max-width:1200px;
-  height:250px;
+  width:100%;
+  height:240px;
   margin:10px auto;
-  border-radius:8px;
   overflow:hidden;
-  box-shadow:0 2px 6px var(--card-shadow);
+  border-radius:8px;
 }
 .banner img{
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
 }
 
-/* Top Row: Emergency + Area Info side-by-side */
+/* ===== Content ===== */
 .top-row{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 20px;
   max-width:1200px;
   margin:auto;
-  gap:10px;  
-  flex-wrap:wrap;
-  box-sizing:border-box;
+  display:flex;
+  gap:10px;
+  padding:10px;
 }
-.top-row .section{
-  flex:1 1 48%;
-  min-width:0;
-  padding:15px;
-  font-size:18px;
+.section{
+  flex:1;
   background:var(--card-bg);
+  padding:15px;
   border-radius:8px;
   box-shadow:0 2px 6px var(--card-shadow);
-  text-align:justify;
-  box-sizing:border-box;
 }
 
-/* Emergency List */
-ul{ list-style:none; padding-left:0; margin:0;}
-li{ margin:6px 0; font-size:18px; }
+.notice,#about{
+  max-width:1200px;
+  margin:20px auto;
+  background:var(--card-bg);
+  padding:20px;
+  border-radius:8px;
+  box-shadow:0 2px 6px var(--card-shadow);
+}
+
+/* ===== Lists ===== */
+ul{ list-style:none; padding:0; margin:0; }
+li{ margin:6px 0; }
+
 .call-btn{
   background:var(--btn-bg);
-  color:var(--btn-text);
-  text-decoration:none;
-  padding:6px 12px;
+  color:#fff;
+  padding:6px 10px;
   border-radius:4px;
-  font-size:18px;
+  text-decoration:none;
 }
 
-/* Today's Notice */
-.notice{
-  background:var(--card-bg);
-  padding:20px;
-  border-radius:8px;
-  max-width:1200px;
-  margin:20px auto;
-  box-shadow:0 2px 6px var(--card-shadow);
-  font-size:18px;
-  text-align:justify;
-  box-sizing:border-box;
-}
-.notice h3{margin-top:0; color:var(--navbar);}
+/* ===== Mobile ===== */
+@media(max-width:768px){
 
-/* About Section */
-#about{
-  max-width:1200px;
-  margin:20px auto;
-  background:var(--card-bg);
-  padding:20px;
-  border-radius:8px;
-  box-shadow:0 2px 6px var(--card-shadow);
-  font-size:18px;
-  text-align:justify;
-  box-sizing:border-box;
-}
-#about h2{color:var(--navbar);}
-#about p{line-height:1.6;}
+  #mobileToggle{ display:block; }
 
-/* Responsive for Mobile */
-@media (max-width:768px){
   .navbar-links{
     display:none;
     flex-direction:column;
-    background:var(--navbar);
     position:absolute;
     top:60px;
     right:0;
-    border-radius:0 0 6px 6px;
-    padding:10px;
-    width:100%; 
-    box-sizing:border-box;
-    z-index:1000;
+    width:100%;
+    background:var(--navbar);
+    padding:12px;
+    z-index:999;
   }
-  #mobileToggle{
-    display:inline-block;
-    color:white;
-    margin-right:15px;
+
+  .navbar-links a{
+    padding:10px 0;
+    font-size:20px;
   }
-  .navbar-left h1{ font-size:22px; }
-  .navbar-left span{ font-size:16px; }
-  .banner{ height:180px; }
 
   .top-row{
-    flex-direction:column; 
-    padding:10px;
-  }
-  .top-row .section{
-    width:100%; 
-    font-size:20px;
-    margin-bottom:15px;
-    line-height:1.5;
+    flex-direction:column;
   }
 
-  li{ font-size:20px; line-height:1.5; }  
-  .call-btn{ font-size:20px; padding:8px 14px; }
-
-  .notice, #about{
-    font-size:20px; 
-    padding:15px; 
-    line-height:1.6; 
-  }
+  body{ font-size:20px; }
 }
 </style>
 </head>
+
 <body>
 
-<!-- Navbar -->
+<!-- ===== Navbar ===== -->
 <div class="navbar">
   <div class="navbar-left">
-    <img id="orgLogo" src="https://via.placeholder.com/50" alt="Logo">
+    <img src="https://via.placeholder.com/50">
     <div>
       <h1>সমাজ সেবা সংগঠন</h1>
-      <span>সেবা, সহায়তা ও এগিয়ে যাওয়ার شعار</span>
+      <span>সেবা, সহায়তা ও মানবতা</span>
     </div>
   </div>
 
   <div class="navbar-links" id="navbarLinks">
-    <a href="#" class="active">Home</a>
-    <a href="#blood">Blood Donor</a>
-    <a href="#notices">Notices</a>
-    <a href="#jobs">Jobs</a>
-    <a href="#accounts">Accounts</a>
-    <a href="#about">About</a>
-    <a href="admin.html" target="_blank">Admin Panel</a>
-    <span id="modeToggle">🌓 Dark/Light</span>
+    <a class="active">Home</a>
+    <a>Blood</a>
+    <a>Notice</a>
+    <a>Jobs</a>
+    <a>Accounts</a>
+    <a>About</a>
+    <a href="https://www.facebook.com/mdshahinalam1414/" target="_blank" class="facebook-link">Facebook</a>
+    <span id="modeToggle">🌓</span>
   </div>
 
   <span id="mobileToggle">☰</span>
 </div>
 
-<!-- Banner / Organization Work Image -->
+<!-- ===== Banner ===== -->
 <div class="banner">
-  <img id="orgBanner" src="https://via.placeholder.com/1200x250?text=Banner+1" alt="সংগঠনের কাজের ছবি">
+  <img id="bannerImg" src="https://via.placeholder.com/1200x300?text=Banner+1">
 </div>
 
-<!-- Top Row: Emergency | Area Info -->
+<!-- ===== Top Section ===== -->
 <div class="top-row">
-  <div class="section" id="emergency-numbers">
+  <div class="section">
     <h3>📞 জরুরি নম্বর</h3>
-    <ul id="emergencyList">Loading...</ul>
+    <ul>
+      <li>হাসপাতাল <a class="call-btn" href="tel:999">999</a></li>
+    </ul>
   </div>
 
-  <div class="section" id="area-info">
-    <h3>🌍 area's পরিচিতি</h3>
-    <p>
-      আমাদের এলাকা একটি সমাজসেবা কেন্দ্রিক এলাকা। এখানে রক্তদান, জরুরি সেবা, নোটিশ ও সাহায্য সংক্রান্ত তথ্য পাওয়া যাবে।
-    </p>
+  <div class="section">
+    <h3>🌍 এলাকার পরিচিতি</h3>
+    <p>এই এলাকা সমাজসেবামূলক কার্যক্রমে সক্রিয়।</p>
   </div>
 </div>
 
-<!-- Today's Notice -->
-<div class="notice" id="todayNotice">
-  Loading today's notice...
+<div class="notice">
+  <h3>📢 আজকের নোটিশ</h3>
+  <p>আজকের গুরুত্বপূর্ণ ঘোষণা এখানে দেখাবে।</p>
 </div>
 
-<!-- About Section -->
 <div id="about">
-  <h2>আমাদের সম্পর্কে</h2>
-  <p><strong>এলাকার পরিচিতি:</strong> আমাদের এলাকা একটি সমাজসেবা কেন্দ্রিক এলাকা যেখানে রক্তদান, জরুরি সেবা ও বিভিন্ন সাহায্য কার্যক্রম পরিচালিত হয়।</p>
-  <p><strong>সংগঠনের পরিচিতি:</strong> সমাজ সেবা সংগঠন স্থানীয় মানুষদের সাহায্য ও কল্যাণে নিবেদিত। আমরা নিয়মিত রক্তদান ক্যাম্প, জরুরি সেবা এবং সামাজিক সচেতনতা কার্যক্রম পরিচালনা করি।</p>
-  <p><strong>ওয়েবসাইট ডিজাইনার:</strong> Md. Shahin Alam * <a href="https://www.facebook.com/mdshahinalam1414/" target="_blank" class="facebook-link">Facebook</a></p>
+  <h3>আমাদের সম্পর্কে</h3>
+  <p>সমাজ সেবা সংগঠন মানুষের পাশে থাকার অঙ্গীকার।</p>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyVw0269RhxPZYtXb6lblkbXiuoJL1t8TjZ7S7ve3dYDSmHeK-l3SAn82z50_g0mEX0Tg/exec";
-
-// Dark/Light Mode Toggle
-document.getElementById("modeToggle").addEventListener("click",()=>{
+/* ===== Dark Mode Persist ===== */
+if(localStorage.getItem("mode")==="dark"){
+  document.body.classList.add("dark-mode");
+}
+document.getElementById("modeToggle").onclick=()=>{
   document.body.classList.toggle("dark-mode");
-});
+  localStorage.setItem("mode",
+    document.body.classList.contains("dark-mode")?"dark":"light"
+  );
+};
 
-// Mobile toggle navbar
-const mobileToggle = document.getElementById("mobileToggle");
-const navbarLinks = document.getElementById("navbarLinks");
-mobileToggle.addEventListener("click", ()=>{
-  navbarLinks.style.display = (navbarLinks.style.display==="flex")?"none":"flex";
-});
+/* ===== Mobile Menu Toggle ===== */
+const toggle=document.getElementById("mobileToggle");
+const menu=document.getElementById("navbarLinks");
 
-// Emergency Numbers
-fetch(API_URL+"?sheet=emergency")
-.then(res=>res.json())
-.then(data=>{
-  let html="";
-  data.forEach(d=>{
-    html+=`<li>${d.name} <a class="call-btn" href="tel:${d.phone}">📞 ${d.phone}</a></li>`;
-  });
-  document.getElementById("emergencyList").innerHTML = html || "No data";
-});
+toggle.onclick=(e)=>{
+  e.stopPropagation();
+  menu.style.display = menu.style.display==="flex"?"none":"flex";
+};
 
-// Today's Notice
-fetch(API_URL+"?sheet=notice")
-.then(res=>res.json())
-.then(data=>{
-  const today=new Date().toISOString().split("T")[0];
-  let todayHTML="";
-  data.forEach(n=>{
-    if(n.date === today){
-      const img = n.photo ? `<br><img src="${n.photo}" style="max-width:100%; margin-top:8px; border-radius:6px;">` : "";
-      todayHTML+=`<h3>📢 ${n.title}</h3>
-                  <p>${n.description}</p>
-                  ${img}`;
+/* ===== AUTO HIDE on outside click ===== */
+document.addEventListener("click",(e)=>{
+  if(window.innerWidth<=768){
+    if(!menu.contains(e.target) && e.target!==toggle){
+      menu.style.display="none";
     }
-  });
-  document.getElementById("todayNotice").innerHTML = todayHTML || "<p>আজকের কোন নোটিশ নেই।</p>";
+  }
 });
 
-// Banner Slideshow
-const bannerImages = [
-  "https://via.placeholder.com/1200x250?text=Banner+1",
-  "https://via.placeholder.com/1200x250?text=Banner+2",
-  "https://via.placeholder.com/1200x250?text=Banner+3"
+/* ===== Banner Slider ===== */
+const imgs=[
+ "https://via.placeholder.com/1200x300?text=Banner+1",
+ "https://via.placeholder.com/1200x300?text=Banner+2",
+ "https://via.placeholder.com/1200x300?text=Banner+3"
 ];
-let bannerIndex = 0;
-const bannerImgElement = document.getElementById("orgBanner");
-setInterval(() => {
-  bannerIndex = (bannerIndex + 1) % bannerImages.length;
-  bannerImgElement.src = bannerImages[bannerIndex];
-}, 5000);
+let i=0;
+setInterval(()=>{
+ i=(i+1)%imgs.length;
+ document.getElementById("bannerImg").src=imgs[i];
+},5000);
 </script>
 
 </body>
 </html>
-
