@@ -100,7 +100,7 @@ body{
   display:block;
 }
 
-/* Top Row Compact */
+/* Top Row: 3 sections side-by-side */
 .top-row{
   display:flex;
   justify-content:space-between;
@@ -110,22 +110,8 @@ body{
   flex-wrap:wrap;
   gap:10px;
 }
-
-/* Left: Emergency Numbers */
-.top-row #emergency-numbers{
-  flex:0 0 32%;
-}
-
-/* Middle: Area Info + Extra Info stacked */
-.top-row #middle-section{
-  flex:0 0 64%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-/* Each section styling */
 .top-row .section{
+  flex:0 0 32%;  /* তিনটি section পাশে পাশে */
   padding:10px;
   font-size:14px;
   background:var(--card-bg);
@@ -173,8 +159,7 @@ li{ margin:5px 0; }
   .top-row{
     flex-direction:column;
   }
-  .top-row #emergency-numbers,
-  .top-row #middle-section{
+  .top-row .section{
     flex:1 0 100%;
   }
   .navbar-left h1{ font-size:18px; }
@@ -215,29 +200,26 @@ li{ margin:5px 0; }
   <img id="orgBanner" src="https://via.placeholder.com/1200x250?text=Banner+1" alt="সংগঠনের কাজের ছবি">
 </div>
 
-<!-- Top Row: Emergency + Middle Section -->
+<!-- Top Row: Emergency | Area Info | Extra Info -->
 <div class="top-row">
-  <!-- Emergency Numbers (বাম) -->
+  <!-- Emergency Numbers -->
   <div class="section" id="emergency-numbers">
     <h3>📞 জরুরি নম্বর</h3>
     <ul id="emergencyList">Loading...</ul>
   </div>
 
-  <!-- Middle Section: Area Info + Extra Info -->
-  <div class="section" id="middle-section">
-    <!-- Area Info -->
-    <div id="area-info">
-      <h3>🌍 area's পরিচিতি</h3>
-      <p>
-        আমাদের এলাকা একটি সমাজসেবা কেন্দ্রিক এলাকা। এখানে রক্তদান, জরুরি সেবা, নোটিশ ও সাহায্য সংক্রান্ত তথ্য পাওয়া যাবে।
-      </p>
-    </div>
+  <!-- Area Info -->
+  <div class="section" id="area-info">
+    <h3>🌍 area's পরিচিতি</h3>
+    <p>
+      আমাদের এলাকা একটি সমাজসেবা কেন্দ্রিক এলাকা। এখানে রক্তদান, জরুরি সেবা, নোটিশ ও সাহায্য সংক্রান্ত তথ্য পাওয়া যাবে।
+    </p>
+  </div>
 
-    <!-- Extra Info -->
-    <div id="extra-section" style="margin-top:10px;">
-      <h3>💡 Extra Info</h3>
-      <p>এখানে পরে যেকোনো content add করা যাবে।</p>
-    </div>
+  <!-- Extra Info -->
+  <div class="section" id="extra-section">
+    <h3>💡 Extra Info</h3>
+    <p>এখানে পরে যেকোনো content add করা যাবে।</p>
   </div>
 </div>
 
