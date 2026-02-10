@@ -15,8 +15,6 @@
   --btn-bg:#0d803f;
   --btn-text:#fff;
 }
-
-/* ===== Base ===== */
 html,body{
   margin:0;
   padding:0;
@@ -30,7 +28,7 @@ html,body{
 }
 body *{ box-sizing:border-box; }
 
-/* ===== Dark Mode ===== */
+/* Dark mode */
 .dark-mode{
   --bg:#121212;
   --text:#e0e0e0;
@@ -39,7 +37,7 @@ body *{ box-sizing:border-box; }
   --card-shadow: rgba(0,0,0,0.5);
 }
 
-/* ===== Navbar ===== */
+/* Navbar */
 .navbar{
   width:100%;
   background:var(--navbar);
@@ -50,7 +48,6 @@ body *{ box-sizing:border-box; }
   padding:10px 16px;
   position:relative;
 }
-
 .navbar-left{
   display:flex;
   align-items:center;
@@ -60,7 +57,6 @@ body *{ box-sizing:border-box; }
   width:46px;
   height:46px;
   border-radius:50%;
-  object-fit:cover;
 }
 .navbar-left h1{
   margin:0;
@@ -68,10 +64,8 @@ body *{ box-sizing:border-box; }
 }
 .navbar-left span{
   font-size:14px;
-  opacity:.9;
 }
 
-/* ===== Links ===== */
 .navbar-links{
   display:flex;
   gap:14px;
@@ -85,26 +79,22 @@ body *{ box-sizing:border-box; }
 .navbar-links a.active{
   text-decoration:underline;
 }
-
-.facebook-link::before{ content:"📘 "; }
-
 #modeToggle{
   cursor:pointer;
   padding:5px 10px;
   background:#fff;
   color:#000;
   border-radius:4px;
-  font-size:14px;
 }
 
-/* ===== Mobile Menu Button ===== */
+/* Mobile menu */
 #mobileToggle{
   display:none;
   font-size:26px;
   cursor:pointer;
 }
 
-/* ===== Banner ===== */
+/* Banner */
 .banner{
   max-width:1200px;
   width:100%;
@@ -119,7 +109,7 @@ body *{ box-sizing:border-box; }
   object-fit:cover;
 }
 
-/* ===== Content ===== */
+/* Content */
 .top-row{
   max-width:1200px;
   margin:auto;
@@ -144,10 +134,8 @@ body *{ box-sizing:border-box; }
   box-shadow:0 2px 6px var(--card-shadow);
 }
 
-/* ===== Lists ===== */
 ul{ list-style:none; padding:0; margin:0; }
 li{ margin:6px 0; }
-
 .call-btn{
   background:var(--btn-bg);
   color:#fff;
@@ -156,9 +144,8 @@ li{ margin:6px 0; }
   text-decoration:none;
 }
 
-/* ===== Mobile ===== */
+/* Mobile */
 @media(max-width:768px){
-
   #mobileToggle{ display:block; }
 
   .navbar-links{
@@ -172,16 +159,11 @@ li{ margin:6px 0; }
     padding:12px;
     z-index:999;
   }
-
   .navbar-links a{
     padding:10px 0;
     font-size:20px;
   }
-
-  .top-row{
-    flex-direction:column;
-  }
-
+  .top-row{ flex-direction:column; }
   body{ font-size:20px; }
 }
 </style>
@@ -189,7 +171,7 @@ li{ margin:6px 0; }
 
 <body>
 
-<!-- ===== Navbar ===== -->
+<!-- Navbar -->
 <div class="navbar">
   <div class="navbar-left">
     <img src="https://via.placeholder.com/50">
@@ -206,19 +188,18 @@ li{ margin:6px 0; }
     <a>Jobs</a>
     <a>Accounts</a>
     <a>About</a>
-    <a href="https://www.facebook.com/mdshahinalam1414/" target="_blank" class="facebook-link">Facebook</a>
     <span id="modeToggle">🌓</span>
   </div>
 
   <span id="mobileToggle">☰</span>
 </div>
 
-<!-- ===== Banner ===== -->
+<!-- Banner -->
 <div class="banner">
   <img id="bannerImg" src="https://via.placeholder.com/1200x300?text=Banner+1">
 </div>
 
-<!-- ===== Top Section ===== -->
+<!-- Top -->
 <div class="top-row">
   <div class="section">
     <h3>📞 জরুরি নম্বর</h3>
@@ -226,7 +207,6 @@ li{ margin:6px 0; }
       <li>হাসপাতাল <a class="call-btn" href="tel:999">999</a></li>
     </ul>
   </div>
-
   <div class="section">
     <h3>🌍 এলাকার পরিচিতি</h3>
     <p>এই এলাকা সমাজসেবামূলক কার্যক্রমে সক্রিয়।</p>
@@ -238,42 +218,50 @@ li{ margin:6px 0; }
   <p>আজকের গুরুত্বপূর্ণ ঘোষণা এখানে দেখাবে।</p>
 </div>
 
+<!-- About -->
 <div id="about">
   <h3>আমাদের সম্পর্কে</h3>
-  <p>সমাজ সেবা সংগঠন মানুষের পাশে থাকার অঙ্গীকার।</p>
+
+  <p><strong>এলাকার পরিচিতি:</strong><br>
+  আমাদের এলাকা একটি মানবিক ও সমাজসেবামূলক কর্মকাণ্ডে সক্রিয় এলাকা।</p>
+
+  <p><strong>সংগঠনের পরিচিতি:</strong><br>
+  সমাজ সেবা সংগঠন মানুষের পাশে দাঁড়ানোর লক্ষ্যে কাজ করে যাচ্ছে।</p>
+
+  <p><strong>ওয়েবসাইট ডিজাইনার:</strong><br>
+  Md. Shahin Alam<br>
+  👉 <a href="https://www.facebook.com/mdshahinalam1414/" target="_blank">
+  Facebook Profile
+  </a>
+  </p>
 </div>
 
 <script>
-/* ===== Dark Mode Persist ===== */
+/* Dark mode persist */
 if(localStorage.getItem("mode")==="dark"){
   document.body.classList.add("dark-mode");
 }
-document.getElementById("modeToggle").onclick=()=>{
+modeToggle.onclick=()=>{
   document.body.classList.toggle("dark-mode");
   localStorage.setItem("mode",
-    document.body.classList.contains("dark-mode")?"dark":"light"
-  );
+    document.body.classList.contains("dark-mode")?"dark":"light");
 };
 
-/* ===== Mobile Menu Toggle ===== */
-const toggle=document.getElementById("mobileToggle");
-const menu=document.getElementById("navbarLinks");
-
-toggle.onclick=(e)=>{
+/* Mobile menu toggle + auto hide */
+mobileToggle.onclick=(e)=>{
   e.stopPropagation();
-  menu.style.display = menu.style.display==="flex"?"none":"flex";
+  navbarLinks.style.display =
+    navbarLinks.style.display==="flex"?"none":"flex";
 };
-
-/* ===== AUTO HIDE on outside click ===== */
 document.addEventListener("click",(e)=>{
   if(window.innerWidth<=768){
-    if(!menu.contains(e.target) && e.target!==toggle){
-      menu.style.display="none";
+    if(!navbarLinks.contains(e.target) && e.target!==mobileToggle){
+      navbarLinks.style.display="none";
     }
   }
 });
 
-/* ===== Banner Slider ===== */
+/* Banner slider */
 const imgs=[
  "https://via.placeholder.com/1200x300?text=Banner+1",
  "https://via.placeholder.com/1200x300?text=Banner+2",
@@ -282,7 +270,7 @@ const imgs=[
 let i=0;
 setInterval(()=>{
  i=(i+1)%imgs.length;
- document.getElementById("bannerImg").src=imgs[i];
+ bannerImg.src=imgs[i];
 },5000);
 </script>
 
