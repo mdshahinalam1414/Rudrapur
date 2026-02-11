@@ -164,7 +164,7 @@ let i=0;
 setInterval(()=>{i=(i+1)%imgs.length;bannerImg.src=imgs[i];},4000);
 
 /* ===== FETCH ACCOUNTS ===== */
-const accountSheet="https://opensheet.elk.sh/YOUR_SHEET_ID/Accounts";
+const accountSheet="https://script.google.com/macros/s/AKfycbwJpcXMzqH1KPJa5V8M8HazvWG8FpejOtZ00e4uWWv7MLU9sJMQ_UEsYhmdTCQ6gnIJcg/exec";
 
 fetch(accountSheet)
 .then(res=>res.json())
@@ -198,3 +198,4 @@ fetch(accountSheet)
 
 </body>
 </html>
+
