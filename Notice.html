@@ -279,50 +279,7 @@ let imgs=["https://picsum.photos/1200/400?1","https://picsum.photos/1200/400?2",
 let i=0;
 setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 
-/* ===== FETCH & RENDER NOTICES ===== */
-const noticeSheet="https://docs.google.com/spreadsheets/d/12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM/edit?gid=2054386218#gid=2054386218"; // Google Sheet ID
-function renderNotices(data){
-  const today=new Date().toISOString().split("T")[0];
-  const container=document.getElementById("noticeList");
-  container.innerHTML="";
 
-  let filtered=data.filter(n=>n.Status==="active" && n.EventDate>=today);
-
-  filtered.sort((a,b)=>{
-    if(a.Pin==="yes" && b.Pin!=="yes") return -1;
-    if(a.Pin!=="yes" && b.Pin==="yes") return 1;
-    return a.EventDate.localeCompare(b.EventDate);
-  });
-
-  if(filtered.length===0){
-    container.innerHTML="<p>বর্তমানে কোনো নোটিশ নেই</p>";
-    return;
-  }
-
-  filtered.forEach(n=>{
-    const pinnedClass=n.Pin==="yes"?"style='border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;'":"";
-    const media=`
-      <div class="notice-media">
-        ${n.Image?`<img src="${n.Image}">`:''}
-        ${n.PDF?`<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>`:''}
-      </div>
-    `;
-    container.innerHTML+=`
-      <div class="notice-card" ${pinnedClass}>
-        <div class="notice-title">${n.Title}</div>
-        <div class="notice-date">📅 ${n.EventDate}</div>
-        <div class="notice-category">${n.Category}</div>
-        <div class="notice-desc">${n.Description}</div>
-        ${media}
-      </div>
-    `;
-  });
-}
-
-fetch(noticeSheet)
-.then(res=>res.json())
-.then(data=>renderNotices(data))
-.catch(err=>{document.getElementById("noticeList").innerHTML="নোটিশ লোড হয়নি।"; console.error(err);});
 </script>
   
 <script>
@@ -472,6 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
 
