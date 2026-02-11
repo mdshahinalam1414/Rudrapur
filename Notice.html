@@ -245,7 +245,7 @@ footer a{
 <section>
   <div class="box">
     <h3>নোটিশ বোর্ড</h3>
-    <div id="noticeList">লোড হচ্ছে...</div>
+    <div id="Notice">লোড হচ্ছে...</div>
   </div>
 </section>
 
@@ -280,7 +280,7 @@ let i=0;
 setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 
 /* ===== FETCH & RENDER NOTICES ===== */
-const noticeSheet="https://opensheet.elk.sh/YOUR_SHEET_ID/Notice"; // Google Sheet ID
+const noticeSheet="https://docs.google.com/spreadsheets/d/12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM/edit?gid=2054386218#gid=2054386218"; // Google Sheet ID
 function renderNotices(data){
   const today=new Date().toISOString().split("T")[0];
   const container=document.getElementById("noticeList");
@@ -472,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
 
