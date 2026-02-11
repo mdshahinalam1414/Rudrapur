@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | সমাজ সেবা সংগঠন</title>
+
+<style>
+/* ===== BASE ===== */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  width:100%;
+  overflow-x:hidden;
+  font-family:Segoe UI, Arial, sans-serif;
+  background:#f4f7f6;
+  color:#222;
+}
+
+/* ===== DARK MODE ===== */
+.dark-mode{background:#121212;color:#eee;}
+.dark-mode section,.dark-mode .box{background:#1e1e1e;}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  width:100%;
+  background:#008C44;
+  color:#fff;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left img{width:45px;height:45px;border-radius:50%;}
+.nav-title h1{font-size:20px;}
+.nav-title span{font-size:13px;}
+.nav-right{display:flex;gap:10px;}
+#modeToggle,#menuToggle{
+  cursor:pointer;
+  background:#fff;
+  color:#000;
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+/* ===== NAV LINKS ===== */
+.nav-links{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  background:#006b34;
+  padding:10px;
+}
+.nav-links a{color:#fff;text-decoration:none;font-weight:600;}
+.nav-links a.active{border-bottom:2px solid #fff;}
+
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;text-align:center;}
+  .nav-links.show{display:flex;}
+}
+
+/* ===== BANNER ===== */
+.banner{width:100%;height:260px;overflow:hidden;}
+.banner img{width:100%;height:100%;object-fit:cover;}
+
+/* ===== SECTION ===== */
+section{max-width:1200px;margin:20px auto;padding:16px;}
+.box{
+  background:#fff;
+  padding:16px;
+  border-radius:10px;
+}
+
+/* ===== ADMIN PANEL ===== */
+input,select,textarea,button{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+button{
+  background:#008C44;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+button.logout{background:#b30000;}
+.hidden{display:none;}
+
+.admin-nav{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  background:#008C44;
+  color:#fff;
+  text-align:center;
+  padding:14px;
+}
+
+@media(max-width:768px){
+  body{font-size:18px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="navbar">
+  <div class="nav-left">
+    <img src="https://via.placeholder.com/100">
+    <div class="nav-title">
+      <h1>সমাজ সেবা সংগঠন</h1>
+      <span>সেবা, সহায়তা ও মানবতা</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span id="modeToggle">🌓</span>
+    <span id="menuToggle">☰</span>
+  </div>
+</div>
+
+<!-- ===== NAV LINKS ===== -->
+<div class="nav-links" id="navLinks">
+  <a href="index.html">Home</a>
+  <a href="Blood Doner.html">Blood</a>
+  <a href="notice.html">Notice</a>
+  <a href="Jobs.html">Jobs</a>
+  <a href="Accounts.html">Accounts</a>
+  <a href="About.html">About</a>
+  <a class="active">Admin Panel</a>
+</div>
+
+<!-- ===== BANNER ===== -->
+<div class="banner">
+  <img id="bannerImg" src="https://picsum.photos/1200/400?admin">
+</div>
+
+<!-- ===== ADMIN BODY ===== -->
+<section>
+  <!-- LOGIN -->
+  <div class="box" id="loginBox">
+    <h3>Admin Login</h3>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="box hidden" id="dashboard">
+    <h3>Admin Dashboard</h3>
+
+    <div class="admin-nav">
+      <button onclick="show('accounts')">Accounts</button>
+      <button onclick="show('notice')">Notice</button>
+      <button onclick="show('jobs')">Jobs</button>
+      <button onclick="show('members')">Members</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- ACCOUNTS -->
+    <div id="accounts" class="hidden">
+      <h4>Accounts Add</h4>
+      <input id="accDate" type="date">
+      <input id="accName" placeholder="Name">
+      <select id="accType">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <input id="accAmount" type="number" placeholder="Amount">
+      <button onclick="addAccount()">Save</button>
+    </div>
+
+    <!-- NOTICE -->
+    <div id="notice" class="hidden">
+      <h4>Notice Add</h4>
+      <input id="nTitle" placeholder="Title">
+      <textarea id="nDesc" placeholder="Description"></textarea>
+      <input id="nDate" type="date">
+      <select id="nPin">
+        <option value="no">Normal</option>
+        <option value="yes">Pin</option>
+      </select>
+      <button onclick="addNotice()">Save</button>
+    </div>
+
+    <!-- JOBS -->
+    <div id="jobs" class="hidden">
+      <h4>Job Add</h4>
+      <input id="jTitle" placeholder="Job Title">
+      <input id="jCompany" placeholder="Company">
+      <textarea id="jDesc" placeholder="Description"></textarea>
+      <input id="jDeadline" type="date">
+      <input id="jLink" placeholder="Apply Link">
+      <button onclick="addJob()">Save</button>
+    </div>
+
+    <!-- MEMBERS -->
+    <div id="members" class="hidden">
+      <h4>Member Add</h4>
+      <input id="mName" placeholder="Name">
+      <input id="mDes" placeholder="Designation">
+      <input id="mAddr" placeholder="Address">
+      <button onclick="addMember()">Save</button>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 সমাজ সেবা সংগঠন</footer>
+
+<script>
+/* ===== MENU ===== */
+menuToggle.onclick=()=>navLinks.classList.toggle("show");
+document.body.addEventListener("click",e=>{
+  if(!e.target.closest(".navbar")&&!e.target.closest(".nav-links")){
+    navLinks.classList.remove("show");
+  }
+});
+
+/* ===== DARK MODE ===== */
+if(localStorage.getItem("mode")==="dark") document.body.classList.add("dark-mode");
+modeToggle.onclick=()=>{
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem("mode",document.body.classList.contains("dark-mode")?"dark":"light");
+};
+
+/* ===== ADMIN API ===== */
+const API="https://script.google.com/macros/s/AKfycbwJpcXMzqH1KPJa5V8M8HazvWG8FpejOtZ00e4uWWv7MLU9sJMQ_UEsYhmdTCQ6gnIJcg/exec";
+
+/* LOGIN */
+function login(){
+  fetch(API,{
+    method:"POST",
+    body:JSON.stringify({action:"login",username:username.value,password:password.value})
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.success){
+      localStorage.setItem("admin","1");
+      loginBox.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+    }else alert("Login failed");
+  });
+}
+if(localStorage.getItem("admin")){
+  loginBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+}
+function logout(){
+  localStorage.removeItem("admin");
+  location.reload();
+}
+function show(id){
+  document.querySelectorAll("#dashboard > div").forEach(d=>d.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+function send(sheet,values){
+  fetch(API,{method:"POST",body:JSON.stringify({action:"add",sheet,values})})
+  .then(()=>alert("Saved"));
+}
+function addAccount(){send("Accounts",[accDate.value,accName.value,accType.value,accAmount.value,"active"]);}
+function addNotice(){send("Notice",[new Date().toISOString().split("T")[0],nTitle.value,nDesc.value,nDate.value,nPin.value,"active","",""]);}
+function addJob(){send("Jobs",[jTitle.value,jCompany.value,jDesc.value,jDeadline.value,jLink.value,"","active"]);}
+function addMember(){send("Members",[mName.value,mDes.value,mAddr.value,"active"]);}
+</script>
+
+</body>
+</html>

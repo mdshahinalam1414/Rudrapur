@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs | সমাজ সেবা সংগঠন</title>
+
+<style>
+/* ===== SAME CSS – UNCHANGED ===== */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;overflow-x:hidden;font-family:Segoe UI, Arial, sans-serif;text-align:justify;background:#f4f7f6;color:#222;}
+.dark-mode{background:#121212;color:#eee;}
+.dark-mode section,.dark-mode .box{background:#1e1e1e;}
+
+.navbar{width:100%;background:#008C44;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-left img{width:45px;height:45px;border-radius:50%;}
+.nav-title h1{font-size:20px;}
+.nav-title span{font-size:13px;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+#modeToggle,#menuToggle{cursor:pointer;font-size:20px;background:#fff;color:#000;padding:6px 10px;border-radius:6px;}
+
+.nav-links{width:100%;display:flex;justify-content:center;gap:20px;background:#006b34;padding:10px;}
+.nav-links a{color:#fff;text-decoration:none;font-weight:600;}
+.nav-links a.active{border-bottom:2px solid #fff;}
+
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;text-align:center;}
+  .nav-links.show{display:flex;}
+}
+
+.banner{width:100%;height:260px;overflow:hidden;}
+.banner img{width:100%;height:100%;object-fit:cover;}
+
+section{width:100%;max-width:1200px;margin:20px auto;padding:16px;}
+.box{background:#fff;padding:16px;border-radius:10px;}
+
+/* ===== JOB CARD ===== */
+.job-card{
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  margin-bottom:16px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+.job-title{font-size:18px;font-weight:600;margin-bottom:4px;}
+.job-company{font-size:14px;color:#555;margin-bottom:6px;}
+.job-deadline{color:#008C44;font-size:14px;margin-bottom:6px;}
+.job-desc{font-size:15px;line-height:1.6;margin-bottom:8px;}
+.job-actions a{
+  display:inline-block;
+  margin-right:8px;
+  padding:6px 12px;
+  border-radius:6px;
+  text-decoration:none;
+  color:#fff;
+  background:#008C44;
+}
+
+footer{background:#008C44;color:#fff;padding:14px;text-align:center;}
+
+@media(max-width:768px){
+  body{font-size:18px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="navbar">
+  <div class="nav-left">
+    <img src="https://via.placeholder.com/100">
+    <div class="nav-title">
+      <h1>সমাজ সেবা সংগঠন</h1>
+      <span>সেবা, সহায়তা ও মানবতা</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span id="modeToggle">🌓</span>
+    <span id="menuToggle">☰</span>
+  </div>
+</div>
+
+<!-- ===== NAV LINKS ===== -->
+<div class="nav-links" id="navLinks">
+  <a href="index.html">Home</a>
+  <a href="Blood Doner.html">Blood</a>
+  <a href="notice.html">Notice</a>
+  <a class="active">Jobs</a>
+  <a href="Accounts.html">Accounts</a>
+  <a href="About.html">About</a>
+  <a href="admin.html">Admin Panel</a>
+</div>
+
+<!-- ===== BANNER ===== -->
+<div class="banner">
+  <img id="bannerImg" src="https://picsum.photos/1200/400?4">
+</div>
+
+<!-- ===== JOBS SECTION ===== -->
+<section>
+  <div class="box">
+    <h3>চলমান চাকরির বিজ্ঞপ্তি</h3>
+    <div id="jobList">লোড হচ্ছে...</div>
+  </div>
+</section>
+
+<footer>
+  © 2026 সমাজ সেবা সংগঠন
+</footer>
+
+<script>
+/* ===== MENU ===== */
+menuToggle.onclick=()=>navLinks.classList.toggle("show");
+document.body.addEventListener("click",e=>{
+  if(!e.target.closest(".navbar")&&!e.target.closest(".nav-links")){
+    navLinks.classList.remove("show");
+  }
+});
+
+/* ===== DARK MODE ===== */
+if(localStorage.getItem("mode")==="dark"){document.body.classList.add("dark-mode");}
+modeToggle.onclick=()=>{
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem("mode",document.body.classList.contains("dark-mode")?"dark":"light");
+};
+
+/* ===== BANNER SLIDER ===== */
+let imgs=[
+ "https://picsum.photos/1200/400?4",
+ "https://picsum.photos/1200/400?5",
+ "https://picsum.photos/1200/400?6"
+];
+let i=0;
+setInterval(()=>{i=(i+1)%imgs.length;bannerImg.src=imgs[i];},4000);
+
+/* ===== FETCH JOBS ===== */
+const jobSheet="https://opensheet.elk.sh/YOUR_SHEET_ID/Jobs";
+
+fetch(jobSheet)
+.then(res=>res.json())
+.then(data=>{
+  const today=new Date().toISOString().split("T")[0];
+  const list=document.getElementById("jobList");
+  list.innerHTML="";
+
+  let activeJobs=data.filter(j=>j.Status==="active" && j.Deadline>=today);
+
+  if(activeJobs.length===0){
+    list.innerHTML="<p>বর্তমানে কোনো চলমান চাকরি নেই</p>";
+    return;
+  }
+
+  activeJobs.forEach(j=>{
+    list.innerHTML+=`
+      <div class="job-card">
+        <div class="job-title">${j.Title}</div>
+        <div class="job-company">${j.Company}</div>
+        <div class="job-deadline">🗓 আবেদন শেষ: ${j.Deadline}</div>
+        <div class="job-desc">${j.Description}</div>
+        <div class="job-actions">
+          ${j.ApplyLink?`<a href="${j.ApplyLink}" target="_blank">Apply</a>`:''}
+          ${j.PDF?`<a href="${j.PDF}" target="_blank">PDF</a>`:''}
+        </div>
+      </div>
+    `;
+  });
+})
+.catch(()=>jobList.innerHTML="Job লোড হয়নি");
+</script>
+
+</body>
+</html>
