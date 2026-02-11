@@ -263,7 +263,43 @@ footer a{
 <footer>
   © 2026 সমাজ সেবা সংগঠন
 </footer>
+<script>
+/* ===== MENU TOGGLE ===== */
+menuToggle.onclick=()=>{
+  navLinks.classList.toggle("show");
+};
 
+/* Auto hide menu on touch */
+document.body.addEventListener("click",e=>{
+  if(!e.target.closest(".navbar") && !e.target.closest(".nav-links")){
+    navLinks.classList.remove("show");
+  }
+});
+
+/* ===== DARK MODE ===== */
+if(localStorage.getItem("mode")==="dark"){
+  document.body.classList.add("dark-mode");
+}
+modeToggle.onclick=()=>{
+  document.body.classList.toggle("dark-mode");
+  localStorage.setItem(
+    "mode",
+    document.body.classList.contains("dark-mode")?"dark":"light"
+  );
+};
+
+/* ===== BANNER SLIDER ===== */
+let imgs=[
+  "https://picsum.photos/1200/400?1",
+  "https://picsum.photos/1200/400?2",
+  "https://picsum.photos/1200/400?3"
+];
+let i=0;
+setInterval(()=>{
+  i=(i+1)%imgs.length;
+  bannerImg.src=imgs[i];
+},4000);
+</script>
 <script>
 /* ===== CONFIG ===== */
 const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; // তোমার Google Sheet ID
@@ -411,6 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
