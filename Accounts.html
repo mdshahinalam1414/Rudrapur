@@ -164,7 +164,9 @@ let i=0;
 setInterval(()=>{i=(i+1)%imgs.length;bannerImg.src=imgs[i];},4000);
 
 /* ===== FETCH ACCOUNTS ===== */
-const accountSheet="https://script.google.com/macros/s/AKfycbwJpcXMzqH1KPJa5V8M8HazvWG8FpejOtZ00e4uWWv7MLU9sJMQ_UEsYhmdTCQ6gnIJcg/exec";
+const accountSheet =
+"https://script.google.com/macros/s/AKfycbzYI19uHCEQqr1mUFNtjmZXRBPjC5l2CLT5ADJEmc9ROXJXZV5zCOlkiI64LPENYdskVA/exec";
+
 
 fetch(accountSheet)
 .then(res=>res.json())
@@ -198,4 +200,5 @@ fetch(accountSheet)
 
 </body>
 </html>
+
 
