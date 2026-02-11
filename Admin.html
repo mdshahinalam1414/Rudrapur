@@ -152,6 +152,7 @@ footer{
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
+    <p id="loginMsg" style="color:red;"></p>
   </div>
 
   <!-- DASHBOARD -->
@@ -235,11 +236,18 @@ modeToggle.onclick=()=>{
 /* ===== ADMIN API ===== */
 const API="https://script.google.com/macros/s/AKfycbwJpcXMzqH1KPJa5V8M8HazvWG8FpejOtZ00e4uWWv7MLU9sJMQ_UEsYhmdTCQ6gnIJcg/exec";
 
-/* LOGIN */
+/* ===== LOGIN FUNCTION ===== */
 function login(){
+  const msg = document.getElementById("loginMsg");
+  msg.innerText = "Checking...";
+
   fetch(API,{
     method:"POST",
-    body:JSON.stringify({action:"login",username:username.value,password:password.value})
+    body:JSON.stringify({
+      action:"login",
+      username:username.value,
+      password:password.value
+    })
   })
   .then(r=>r.json())
   .then(d=>{
@@ -247,21 +255,35 @@ function login(){
       localStorage.setItem("admin","1");
       loginBox.classList.add("hidden");
       dashboard.classList.remove("hidden");
-    }else alert("Login failed");
+    }else{
+      msg.innerText = "❌ Login failed";
+    }
+  })
+  .catch(err=>{
+    msg.innerText = "⚠️ Server error";
+    console.error(err);
   });
 }
+
+/* ===== CHECK LOGIN ===== */
 if(localStorage.getItem("admin")){
   loginBox.classList.add("hidden");
   dashboard.classList.remove("hidden");
 }
+
+/* ===== LOGOUT ===== */
 function logout(){
   localStorage.removeItem("admin");
   location.reload();
 }
+
+/* ===== NAVIGATION DASHBOARD ===== */
 function show(id){
   document.querySelectorAll("#dashboard > div").forEach(d=>d.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
+
+/* ===== ADD DATA ===== */
 function send(sheet,values){
   fetch(API,{method:"POST",body:JSON.stringify({action:"add",sheet,values})})
   .then(()=>alert("Saved"));
@@ -271,249 +293,5 @@ function addNotice(){send("Notice",[new Date().toISOString().split("T")[0],nTitl
 function addJob(){send("Jobs",[jTitle.value,jCompany.value,jDesc.value,jDeadline.value,jLink.value,"","active"]);}
 function addMember(){send("Members",[mName.value,mDes.value,mAddr.value,"active"]);}
 </script>
-<script>
-/* ===== CONFIG ===== */
-const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; // তোমার Google Sheet ID
-const API = `https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec`;
-
-/* ===== FETCH FUNCTION ===== */
-async function fetchSheet(Admin) {
-  try {
-    const res = await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "fetch",
-        sheet: Admin
-      })
-    });
-    const data = await res.json();
-    return data.filter(r => r.Status === "active");
-  } catch (err) {
-    console.error(sheetName + " fetch failed:", err);
-    return [];
-  }
-}
-
-/* ===== RENDER ACCOUNTS ===== */
-async function renderAccounts() {
-  const accounts = await fetchSheet("Accounts");
-  let income = 0, expense = 0;
-  const container = document.getElementById("accountList");
-  container.innerHTML = "";
-
-  accounts.forEach(a => {
-    const amount = parseFloat(a.Amount);
-    if(a.Type === "income") income += amount;
-    if(a.Type === "expense") expense += amount;
-
-    container.innerHTML += `
-      <div class="account-card">
-        <div class="acc-name">${a.Name}</div>
-        <div class="acc-type">${a.Type === "income" ? "অনুদান" : "খরচ"}</div>
-        <div class="acc-amount">৳ ${amount}</div>
-      </div>
-    `;
-  });
-
-  document.getElementById("totalIncome").innerText = "৳ " + income;
-  document.getElementById("totalExpense").innerText = "৳ " + expense;
-  document.getElementById("balance").innerText = "৳ " + (income - expense);
-}
-
-/* ===== RENDER NOTICE ===== */
-async function renderNotices() {
-  const notices = await fetchSheet("Notice");
-  const today = new Date().toISOString().split("T")[0];
-  const container = document.getElementById("noticeList");
-  container.innerHTML = "";
-
-  let filtered = notices.filter(n => n.EventDate >= today);
-
-  filtered.sort((a,b) => {
-    if(a.Pin === "yes" && b.Pin !== "yes") return -1;
-    if(a.Pin !== "yes" && b.Pin === "yes") return 1;
-    return a.EventDate.localeCompare(b.EventDate);
-  });
-
-  if(filtered.length === 0) {
-    container.innerHTML = "<p>বর্তমানে কোনো নোটিশ নেই</p>";
-    return;
-  }
-
-  filtered.forEach(n => {
-    const pinnedStyle = n.Pin === "yes" ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" : "";
-    const media = `
-      <div class="notice-media">
-        ${n.Image ? `<img src="${n.Image}">` : ""}
-        ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
-      </div>
-    `;
-    container.innerHTML += `
-      <div class="notice-card" style="${pinnedStyle}">
-        <div class="notice-title">${n.Title}</div>
-        <div class="notice-date">📅 ${n.EventDate}</div>
-        <div class="notice-category">${n.Category}</div>
-        <div class="notice-desc">${n.Description}</div>
-        ${media}
-      </div>
-    `;
-  });
-}
-
-/* ===== RENDER JOBS ===== */
-async function renderJobs() {
-  const jobs = await fetchSheet("Jobs");
-  const container = document.getElementById("jobList");
-  container.innerHTML = "";
-
-  if(jobs.length === 0) {
-    container.innerHTML = "<p>বর্তমানে কোনো চাকরির তথ্য নেই</p>";
-    return;
-  }
-
-  jobs.forEach(j => {
-    container.innerHTML += `
-      <div class="job-card">
-        <div class="job-title">${j.Title}</div>
-        <div class="job-company">${j.Company}</div>
-        <div class="job-desc">${j.Description}</div>
-        <div class="job-deadline">আবেদনের শেষ তারিখ: ${j.Deadline}</div>
-        ${j.Link ? `<a href="${j.Link}" target="_blank">Apply Here</a>` : ""}
-      </div>
-    `;
-  });
-}
-
-/* ===== RENDER MEMBERS ===== */
-async function renderMembers() {
-  const members = await fetchSheet("Members");
-  const container = document.getElementById("memberList");
-  container.innerHTML = "";
-
-  if(members.length === 0) {
-    container.innerHTML = "<p>কোনো সদস্য পাওয়া যায়নি</p>";
-    return;
-  }
-
-  members.forEach(m => {
-    container.innerHTML += `
-      <div class="member-card">
-        <div class="member-name">${m.Name}</div>
-        <div class="member-designation">${m.Designation}</div>
-        <div class="member-address">${m.Address}</div>
-      </div>
-    `;
-  });
-}
-
-/* ===== INIT ===== */
-document.addEventListener("DOMContentLoaded", () => {
-  if(document.getElementById("accountList")) renderAccounts();
-  if(document.getElementById("noticeList")) renderNotices();
-  if(document.getElementById("jobList")) renderJobs();
-  if(document.getElementById("memberList")) renderMembers();
-});
-
-</script>
-
-  <script>
-/* ===== CONFIG ===== */
-const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec";
-
-/* ===== ADMIN LOGIN ===== */
-async function adminLogin() {
-  const username = document.getElementById("adminUser").value;
-  const password = document.getElementById("adminPass").value;
-  const msg = document.getElementById("loginMsg");
-
-  msg.innerText = "Checking...";
-
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "login",
-        username: username,
-        password: password
-      })
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      localStorage.setItem("adminLogin", "true");
-      localStorage.setItem("adminRole", data.role);
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("adminPanel").style.display = "block";
-    } else {
-      msg.innerText = "❌ ভুল Username বা Password";
-    }
-
-  } catch (e) {
-    msg.innerText = "⚠️ সার্ভার সমস্যা";
-  }
-}
-
-/* ===== LOGIN CHECK ===== */
-function checkAdminLogin() {
-  if (localStorage.getItem("adminLogin") === "true") {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-  }
-}
-
-/* ===== LOGOUT ===== */
-function adminLogout() {
-  localStorage.removeItem("adminLogin");
-  localStorage.removeItem("adminRole");
-  location.reload();
-}
-
-/* ===== ADD DATA (ANY SHEET) ===== */
-async function addData(sheetName, valuesArray) {
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "add",
-        sheet: sheetName,
-        values: valuesArray
-      })
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      alert("✅ Data Successfully Added");
-    } else {
-      alert("❌ Data Add Failed");
-    }
-  } catch (err) {
-    alert("⚠️ Server Error");
-  }
-}
-
-/* ===== EXAMPLE: ADD ACCOUNT ===== */
-function addAccount() {
-  const name = document.getElementById("accName").value;
-  const type = document.getElementById("accType").value;
-  const amount = document.getElementById("accAmount").value;
-  const status = "active";
-
-  if (!name || !amount) {
-    alert("সব ঘর পূরণ করো");
-    return;
-  }
-
-  addData("Accounts", [name, type, amount, status]);
-}
-
-/* ===== PAGE LOAD ===== */
-document.addEventListener("DOMContentLoaded", checkAdminLogin);
-</script>
-
-  
 </body>
 </html>
-
-
-
