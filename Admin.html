@@ -415,6 +415,104 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
+
+  <script>
+/* ===== CONFIG ===== */
+const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec";
+
+/* ===== ADMIN LOGIN ===== */
+async function adminLogin() {
+  const username = document.getElementById("adminUser").value;
+  const password = document.getElementById("adminPass").value;
+  const msg = document.getElementById("loginMsg");
+
+  msg.innerText = "Checking...";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "login",
+        username: username,
+        password: password
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem("adminLogin", "true");
+      localStorage.setItem("adminRole", data.role);
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
+    } else {
+      msg.innerText = "❌ ভুল Username বা Password";
+    }
+
+  } catch (e) {
+    msg.innerText = "⚠️ সার্ভার সমস্যা";
+  }
+}
+
+/* ===== LOGIN CHECK ===== */
+function checkAdminLogin() {
+  if (localStorage.getItem("adminLogin") === "true") {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+  }
+}
+
+/* ===== LOGOUT ===== */
+function adminLogout() {
+  localStorage.removeItem("adminLogin");
+  localStorage.removeItem("adminRole");
+  location.reload();
+}
+
+/* ===== ADD DATA (ANY SHEET) ===== */
+async function addData(sheetName, valuesArray) {
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "add",
+        sheet: sheetName,
+        values: valuesArray
+      })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert("✅ Data Successfully Added");
+    } else {
+      alert("❌ Data Add Failed");
+    }
+  } catch (err) {
+    alert("⚠️ Server Error");
+  }
+}
+
+/* ===== EXAMPLE: ADD ACCOUNT ===== */
+function addAccount() {
+  const name = document.getElementById("accName").value;
+  const type = document.getElementById("accType").value;
+  const amount = document.getElementById("accAmount").value;
+  const status = "active";
+
+  if (!name || !amount) {
+    alert("সব ঘর পূরণ করো");
+    return;
+  }
+
+  addData("Accounts", [name, type, amount, status]);
+}
+
+/* ===== PAGE LOAD ===== */
+document.addEventListener("DOMContentLoaded", checkAdminLogin);
+</script>
+
+  
 </body>
 </html>
+
 
