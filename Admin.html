@@ -277,13 +277,13 @@ const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; // তোমা
 const API = `https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec`;
 
 /* ===== FETCH FUNCTION ===== */
-async function fetchSheet(Accounts) {
+async function fetchSheet(Admin) {
   try {
     const res = await fetch(API, {
       method: "POST",
       body: JSON.stringify({
         action: "fetch",
-        sheet: Accounts
+        sheet: Admin
       })
     });
     const data = await res.json();
@@ -514,5 +514,6 @@ document.addEventListener("DOMContentLoaded", checkAdminLogin);
   
 </body>
 </html>
+
 
 
