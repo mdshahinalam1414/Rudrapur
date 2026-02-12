@@ -292,8 +292,14 @@ async function fetchSheet(sheetName) {
       method: "POST",
       body: JSON.stringify({ action: "fetch", sheet: sheetName })
     });
+
     const data = await res.json();
-    return data.filter(r => r.Status === "active");
+
+    // Status case-insensitive করা হলো
+    return data.filter(r => 
+      r.Status && r.Status.toString().toLowerCase() === "active"
+    );
+
   } catch (err) {
     console.error(sheetName + " fetch failed:", err);
     return [];
@@ -302,33 +308,51 @@ async function fetchSheet(sheetName) {
 
 /* ===== RENDER NOTICES ===== */
 async function renderNotices() {
+
   const notices = await fetchSheet("Notice");
   console.log("Fetched notices:", notices);
 
   const container = document.getElementById("Notice");
+  if (!container) return;
+
   container.innerHTML = "";
 
   const today = new Date();
-  today.setHours(0,0,0,0); // শুধু date compare
+  today.setHours(0,0,0,0);
 
-  // ===== FILTER FUTURE NOTICES =====
+  // ===== FILTER FUTURE + TODAY =====
   let filtered = notices.filter(n => {
+
     if (!n.EventDate) return false;
 
-    const noticeDate = new Date(n.EventDate.toString().trim());
-    if (isNaN(noticeDate)) return false;
+    const parts = n.EventDate.toString().trim().split("-");
+    if (parts.length !== 3) return false;
 
+    const year  = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1;
+    const day   = parseInt(parts[2]);
+
+    const noticeDate = new Date(year, month, day);
     noticeDate.setHours(0,0,0,0);
+
     return noticeDate >= today;
   });
 
-  // ===== PINNED FIRST & SORT BY DATE =====
+  // ===== PINNED FIRST + DATE SORT =====
   filtered.sort((a, b) => {
-    if (a.Pin === "yes" && b.Pin !== "yes") return -1;
-    if (a.Pin !== "yes" && b.Pin === "yes") return 1;
 
-    const dateA = new Date(a.EventDate);
-    const dateB = new Date(b.EventDate);
+    const pinA = a.Pin ? a.Pin.toString().toLowerCase() : "";
+    const pinB = b.Pin ? b.Pin.toString().toLowerCase() : "";
+
+    if (pinA === "yes" && pinB !== "yes") return -1;
+    if (pinA !== "yes" && pinB === "yes") return 1;
+
+    const aParts = a.EventDate.split("-");
+    const bParts = b.EventDate.split("-");
+
+    const dateA = new Date(aParts[0], aParts[1]-1, aParts[2]);
+    const dateB = new Date(bParts[0], bParts[1]-1, bParts[2]);
+
     return dateA - dateB;
   });
 
@@ -339,19 +363,26 @@ async function renderNotices() {
 
   // ===== RENDER =====
   filtered.forEach(n => {
-    const pinnedStyle = n.Pin === "yes" ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" : "";
+
+    const pinValue = n.Pin ? n.Pin.toString().toLowerCase() : "";
+
+    const pinnedStyle = pinValue === "yes"
+      ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;"
+      : "padding:10px;margin-bottom:12px;";
+
     const media = `
       <div class="notice-media">
         ${n.Image ? `<img src="${n.Image}" style="max-width:150px;margin-top:5px;">` : ""}
         ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
       </div>
     `;
+
     container.innerHTML += `
       <div class="notice-card" style="${pinnedStyle}">
-        <div class="notice-title">${n.Title}</div>
-        <div class="notice-date">📅 ${n.EventDate}</div>
-        <div class="notice-category">${n.Category}</div>
-        <div class="notice-desc">${n.Description}</div>
+        <div class="notice-title">${n.Title || ""}</div>
+        <div class="notice-date">📅 ${n.EventDate || ""}</div>
+        <div class="notice-category">${n.Category || ""}</div>
+        <div class="notice-desc">${n.Description || ""}</div>
         ${media}
       </div>
     `;
@@ -360,12 +391,16 @@ async function renderNotices() {
 
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("Notice")) renderNotices();
+  if (document.getElementById("Notice")) {
+    renderNotices();
+  }
 });
 </script>
+
    
 </body>
 </html>
+
 
 
 
