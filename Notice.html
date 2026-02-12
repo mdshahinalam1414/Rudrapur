@@ -281,10 +281,8 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 </script>
   
 <script>
-/* ===== CONFIG ===== */
 const API = "https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec";
 
-/* ===== FETCH FUNCTION ===== */
 async function fetchSheet(sheetName) {
   try {
     const res = await fetch(API, {
@@ -304,29 +302,24 @@ async function fetchSheet(sheetName) {
   }
 }
 
-/* ===== SAFE DATE PARSER ===== */
 function parseDate(dateStr) {
-
   if (!dateStr) return null;
 
   dateStr = dateStr.toString().trim();
 
-  // YYYY-MM-DD
   if (dateStr.includes("-")) {
-    const parts = dateStr.split("-");
-    return new Date(parts[0], parts[1] - 1, parts[2]);
+    const p = dateStr.split("-");
+    return new Date(p[0], p[1]-1, p[2]);
   }
 
-  // MM/DD/YYYY
   if (dateStr.includes("/")) {
-    const parts = dateStr.split("/");
-    return new Date(parts[2], parts[0] - 1, parts[1]);
+    const p = dateStr.split("/");
+    return new Date(p[2], p[0]-1, p[1]);
   }
 
   return null;
 }
 
-/* ===== RENDER ===== */
 async function renderNotices() {
 
   const notices = await fetchSheet("Notice");
@@ -341,15 +334,14 @@ async function renderNotices() {
   today.setHours(0,0,0,0);
 
   let filtered = notices.filter(n => {
-    const noticeDate = parseDate(n.EventDate);
+    const noticeDate = parseDate(n["Event Date"]); // ✅ FIXED HERE
     if (!noticeDate) return false;
 
     noticeDate.setHours(0,0,0,0);
     return noticeDate >= today;
   });
 
-  // PINNED FIRST + DATE SORT
-  filtered.sort((a, b) => {
+  filtered.sort((a,b) => {
 
     const pinA = a.Pin ? a.Pin.toLowerCase() : "";
     const pinB = b.Pin ? b.Pin.toLowerCase() : "";
@@ -357,7 +349,7 @@ async function renderNotices() {
     if (pinA === "yes" && pinB !== "yes") return -1;
     if (pinA !== "yes" && pinB === "yes") return 1;
 
-    return parseDate(a.EventDate) - parseDate(b.EventDate);
+    return parseDate(a["Event Date"]) - parseDate(b["Event Date"]);
   });
 
   if (filtered.length === 0) {
@@ -376,7 +368,7 @@ async function renderNotices() {
     container.innerHTML += `
       <div style="${pinnedStyle}">
         <h3>${n.Title || ""}</h3>
-        <p>📅 ${n.EventDate || ""}</p>
+        <p>📅 ${n["Event Date"] || ""}</p>
         <p>${n.Description || ""}</p>
         ${n.Image ? `<img src="${n.Image}" style="max-width:150px;">` : ""}
         ${n.PDF ? `<br><a href="${n.PDF}" target="_blank">PDF দেখুন</a>` : ""}
@@ -389,9 +381,11 @@ document.addEventListener("DOMContentLoaded", renderNotices);
 </script>
 
 
+
    
 </body>
 </html>
+
 
 
 
