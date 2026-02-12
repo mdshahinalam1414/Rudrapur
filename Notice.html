@@ -282,71 +282,43 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
   
 <script>
 /* ===== CONFIG ===== */
-const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; // তোমার Google Sheet ID
-const API = `https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec`;
+const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; 
+const API = "https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec";
 
 /* ===== FETCH FUNCTION ===== */
-async function fetchSheet(Notice) {
+async function fetchSheet(sheetName) {
   try {
     const res = await fetch(API, {
       method: "POST",
-      body: JSON.stringify({
-        action: "fetch",
-        sheet: Notice
-      })
+      body: JSON.stringify({ action: "fetch", sheet: sheetName })
     });
     const data = await res.json();
     return data.filter(r => r.Status === "active");
   } catch (err) {
-    console.error(Notice + " fetch failed:", err);
+    console.error(sheetName + " fetch failed:", err);
     return [];
   }
 }
 
-/* ===== RENDER ACCOUNTS ===== */
-async function renderAccounts() {
-  const accounts = await fetchSheet("Accounts");
-  let income = 0, expense = 0;
-  const container = document.getElementById("accountList");
-  container.innerHTML = "";
-
-  accounts.forEach(a => {
-    const amount = parseFloat(a.Amount);
-    if(a.Type === "income") income += amount;
-    if(a.Type === "expense") expense += amount;
-
-    container.innerHTML += `
-      <div class="account-card">
-        <div class="acc-name">${a.Name}</div>
-        <div class="acc-type">${a.Type === "income" ? "অনুদান" : "খরচ"}</div>
-        <div class="acc-amount">৳ ${amount}</div>
-      </div>
-    `;
-  });
-
-  document.getElementById("totalIncome").innerText = "৳ " + income;
-  document.getElementById("totalExpense").innerText = "৳ " + expense;
-  document.getElementById("balance").innerText = "৳ " + (income - expense);
-}
-
-/* ===== RENDER NOTICE ===== */
+/* ===== RENDER NOTICES ===== */
 async function renderNotices() {
   const notices = await fetchSheet("Notice");
   console.log("Fetched notices:", notices);
 
-  const today = new Date();
   const container = document.getElementById("Notice");
   container.innerHTML = "";
 
-  // Filter: only active notices with valid EventDate >= today
+  const today = new Date();
+  today.setHours(0,0,0,0); // শুধু date compare
+
   let filtered = notices.filter(n => {
-    if(!n.EventDate) return false; // যদি date খালি থাকে
+    if(!n.EventDate) return false;
     const noticeDate = new Date(n.EventDate);
+    noticeDate.setHours(0,0,0,0);
     return noticeDate >= today;
   });
 
-  // Sort pinned first, then by date
-  filtered.sort((a, b) => {
+  filtered.sort((a,b) => {
     if(a.Pin === "yes" && b.Pin !== "yes") return -1;
     if(a.Pin !== "yes" && b.Pin === "yes") return 1;
     return new Date(a.EventDate) - new Date(b.EventDate);
@@ -357,12 +329,11 @@ async function renderNotices() {
     return;
   }
 
-  // Render notices
   filtered.forEach(n => {
     const pinnedStyle = n.Pin === "yes" ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" : "";
     const media = `
       <div class="notice-media">
-        ${n.Image ? `<img src="${n.Image}" alt="Notice Image">` : ""}
+        ${n.Image ? `<img src="${n.Image}">` : ""}
         ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
       </div>
     `;
@@ -378,65 +349,16 @@ async function renderNotices() {
   });
 }
 
-
-/* ===== RENDER JOBS ===== */
-async function renderJobs() {
-  const jobs = await fetchSheet("Jobs");
-  const container = document.getElementById("jobList");
-  container.innerHTML = "";
-
-  if(jobs.length === 0) {
-    container.innerHTML = "<p>বর্তমানে কোনো চাকরির তথ্য নেই</p>";
-    return;
-  }
-
-  jobs.forEach(j => {
-    container.innerHTML += `
-      <div class="job-card">
-        <div class="job-title">${j.Title}</div>
-        <div class="job-company">${j.Company}</div>
-        <div class="job-desc">${j.Description}</div>
-        <div class="job-deadline">আবেদনের শেষ তারিখ: ${j.Deadline}</div>
-        ${j.Link ? `<a href="${j.Link}" target="_blank">Apply Here</a>` : ""}
-      </div>
-    `;
-  });
-}
-
-/* ===== RENDER MEMBERS ===== */
-async function renderMembers() {
-  const members = await fetchSheet("Members");
-  const container = document.getElementById("memberList");
-  container.innerHTML = "";
-
-  if(members.length === 0) {
-    container.innerHTML = "<p>কোনো সদস্য পাওয়া যায়নি</p>";
-    return;
-  }
-
-  members.forEach(m => {
-    container.innerHTML += `
-      <div class="member-card">
-        <div class="member-name">${m.Name}</div>
-        <div class="member-designation">${m.Designation}</div>
-        <div class="member-address">${m.Address}</div>
-      </div>
-    `;
-  });
-}
-
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", () => {
-  if(document.getElementById("accountList")) renderAccounts();
   if(document.getElementById("Notice")) renderNotices();
-  if(document.getElementById("jobList")) renderJobs();
-  if(document.getElementById("memberList")) renderMembers();
 });
-
 </script>
+
   
 </body>
 </html>
+
 
 
 
