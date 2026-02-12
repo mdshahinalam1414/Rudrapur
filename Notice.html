@@ -281,7 +281,7 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 </script>
   
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxlQERtKM6nWCbliYoI8geGWGLSlpeEyPBuAGNYB8aYAcTByRvlc3n7sqmBhj8Rm6pGBw/exec";
+const API = "https://script.google.com/macros/s/AKfycbylcapnjyKpXa3nm1kiSH3d9MxUL5mOlxwek8Wn0DY3UnYAEZmHCaZh3SVlow3ljHZLiMQ/exec";
 
 // ✅ GET ব্যবহার করে fetch
 async function fetchSheet(sheetName) {
@@ -289,11 +289,13 @@ async function fetchSheet(sheetName) {
     const res = await fetch(`${API}?sheet=${encodeURIComponent(sheetName)}`);
     const data = await res.json();
 
-    return Array.isArray(data)
-      ? data.filter(r =>
-          r.Status && r.Status.toString().toLowerCase() === "active"
-        )
-      : [];
+    // safety check: ensure array
+    if (!Array.isArray(data)) return [];
+
+    // active status filter
+    return data.filter(r =>
+      r.Status && r.Status.toString().toLowerCase() === "active"
+    );
 
   } catch (err) {
     console.error("Fetch failed:", err);
@@ -304,16 +306,19 @@ async function fetchSheet(sheetName) {
 // Date parse helper
 function parseDate(dateStr) {
   if (!dateStr) return null;
-
   dateStr = dateStr.toString().trim();
 
+  // yyyy-mm-dd
   if (dateStr.includes("-")) {
     const p = dateStr.split("-");
+    if (p.length !== 3) return null;
     return new Date(p[0], p[1]-1, p[2]);
   }
 
+  // mm/dd/yyyy
   if (dateStr.includes("/")) {
     const p = dateStr.split("/");
+    if (p.length !== 3) return null;
     return new Date(p[2], p[0]-1, p[1]);
   }
 
@@ -332,6 +337,7 @@ async function renderNotices() {
   const today = new Date();
   today.setHours(0,0,0,0);
 
+  // filter future notices
   let filtered = notices.filter(n => {
     const noticeDate = parseDate(n["Event Date"]);
     if (!noticeDate) return false;
@@ -347,10 +353,12 @@ async function renderNotices() {
     if (pinA === "yes" && pinB !== "yes") return -1;
     if (pinA !== "yes" && pinB === "yes") return 1;
 
-    return parseDate(a["Event Date"]) - parseDate(b["Event Date"]);
+    const dateA = parseDate(a["Event Date"]);
+    const dateB = parseDate(b["Event Date"]);
+    return dateA - dateB;
   });
 
-  if(filtered.length === 0){
+  if (filtered.length === 0) {
     container.innerHTML = "<p>বর্তমানে কোনো নোটিশ নেই</p>";
     return;
   }
@@ -366,22 +374,20 @@ async function renderNotices() {
         <h3>${n.Title || ""}</h3>
         <p>📅 ${n["Event Date"] || ""}</p>
         <p>${n.Description || ""}</p>
-        ${n.Image ? `<img src="${n.Image}" style="max-width:150px;">` : ""}
+        ${n.Image ? `<img src="${n.Image}" style="max-width:150px;margin-top:5px;">` : ""}
         ${n.PDF ? `<br><a href="${n.PDF}" target="_blank">PDF দেখুন</a>` : ""}
       </div>
     `;
   });
 }
 
+// Auto render on DOM load
 document.addEventListener("DOMContentLoaded", renderNotices);
 </script>
-
-
-
-
    
 </body>
 </html>
+
 
 
 
