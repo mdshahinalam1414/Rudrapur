@@ -282,7 +282,6 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
   
 <script>
 /* ===== CONFIG ===== */
-const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM"; 
 const API = "https://script.google.com/macros/s/AKfycbyCuqrWetwsX5vCLx63nO9HBi6LN_ZLpNyl55Wos_9ODbVq27OPbNPDs4jQFZVFADyHDQ/exec";
 
 /* ===== FETCH FUNCTION ===== */
@@ -295,18 +294,39 @@ async function fetchSheet(sheetName) {
 
     const data = await res.json();
 
-    // Status case-insensitive করা হলো
-    return data.filter(r => 
+    return data.filter(r =>
       r.Status && r.Status.toString().toLowerCase() === "active"
     );
 
   } catch (err) {
-    console.error(sheetName + " fetch failed:", err);
+    console.error("Fetch failed:", err);
     return [];
   }
 }
 
-/* ===== RENDER NOTICES ===== */
+/* ===== SAFE DATE PARSER ===== */
+function parseDate(dateStr) {
+
+  if (!dateStr) return null;
+
+  dateStr = dateStr.toString().trim();
+
+  // YYYY-MM-DD
+  if (dateStr.includes("-")) {
+    const parts = dateStr.split("-");
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  // MM/DD/YYYY
+  if (dateStr.includes("/")) {
+    const parts = dateStr.split("/");
+    return new Date(parts[2], parts[0] - 1, parts[1]);
+  }
+
+  return null;
+}
+
+/* ===== RENDER ===== */
 async function renderNotices() {
 
   const notices = await fetchSheet("Notice");
@@ -320,40 +340,24 @@ async function renderNotices() {
   const today = new Date();
   today.setHours(0,0,0,0);
 
-  // ===== FILTER FUTURE + TODAY =====
   let filtered = notices.filter(n => {
+    const noticeDate = parseDate(n.EventDate);
+    if (!noticeDate) return false;
 
-    if (!n.EventDate) return false;
-
-    const parts = n.EventDate.toString().trim().split("-");
-    if (parts.length !== 3) return false;
-
-    const year  = parseInt(parts[0]);
-    const month = parseInt(parts[1]) - 1;
-    const day   = parseInt(parts[2]);
-
-    const noticeDate = new Date(year, month, day);
     noticeDate.setHours(0,0,0,0);
-
     return noticeDate >= today;
   });
 
-  // ===== PINNED FIRST + DATE SORT =====
+  // PINNED FIRST + DATE SORT
   filtered.sort((a, b) => {
 
-    const pinA = a.Pin ? a.Pin.toString().toLowerCase() : "";
-    const pinB = b.Pin ? b.Pin.toString().toLowerCase() : "";
+    const pinA = a.Pin ? a.Pin.toLowerCase() : "";
+    const pinB = b.Pin ? b.Pin.toLowerCase() : "";
 
     if (pinA === "yes" && pinB !== "yes") return -1;
     if (pinA !== "yes" && pinB === "yes") return 1;
 
-    const aParts = a.EventDate.split("-");
-    const bParts = b.EventDate.split("-");
-
-    const dateA = new Date(aParts[0], aParts[1]-1, aParts[2]);
-    const dateB = new Date(bParts[0], bParts[1]-1, bParts[2]);
-
-    return dateA - dateB;
+    return parseDate(a.EventDate) - parseDate(b.EventDate);
   });
 
   if (filtered.length === 0) {
@@ -361,45 +365,34 @@ async function renderNotices() {
     return;
   }
 
-  // ===== RENDER =====
   filtered.forEach(n => {
 
-    const pinValue = n.Pin ? n.Pin.toString().toLowerCase() : "";
+    const pinValue = n.Pin ? n.Pin.toLowerCase() : "";
 
     const pinnedStyle = pinValue === "yes"
       ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;"
       : "padding:10px;margin-bottom:12px;";
 
-    const media = `
-      <div class="notice-media">
-        ${n.Image ? `<img src="${n.Image}" style="max-width:150px;margin-top:5px;">` : ""}
-        ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
-      </div>
-    `;
-
     container.innerHTML += `
-      <div class="notice-card" style="${pinnedStyle}">
-        <div class="notice-title">${n.Title || ""}</div>
-        <div class="notice-date">📅 ${n.EventDate || ""}</div>
-        <div class="notice-category">${n.Category || ""}</div>
-        <div class="notice-desc">${n.Description || ""}</div>
-        ${media}
+      <div style="${pinnedStyle}">
+        <h3>${n.Title || ""}</h3>
+        <p>📅 ${n.EventDate || ""}</p>
+        <p>${n.Description || ""}</p>
+        ${n.Image ? `<img src="${n.Image}" style="max-width:150px;">` : ""}
+        ${n.PDF ? `<br><a href="${n.PDF}" target="_blank">PDF দেখুন</a>` : ""}
       </div>
     `;
   });
 }
 
-/* ===== INIT ===== */
-document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("Notice")) {
-    renderNotices();
-  }
-});
+document.addEventListener("DOMContentLoaded", renderNotices);
 </script>
+
 
    
 </body>
 </html>
+
 
 
 
