@@ -281,50 +281,26 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 </script>
   
 <script>
-// ✅ তোমার Web App API URL এখানে বসাও
+// ✅ Web App API URL
 const SHEET_ID = "12Tl3b6MISeOMsS9tX7268Pkk9CpgKefoXKVPU7dRFpM";
 const API = "https://script.google.com/macros/s/AKfycbzHVEmsjVoyj46mdaAjS6r8uWgbojWXxUtO8fn6YCuXsqZ1wr7dYVUDAGJ5YBbdAxFr6w/exec";
 
-// GET দিয়ে fetch
+// Fetch sheet data
 async function fetchSheet(sheetName) {
   try {
     const res = await fetch(`${API}?sheet=${encodeURIComponent(sheetName)}`);
     const data = await res.json();
 
-    // safety check: ensure array
     if (!Array.isArray(data)) return [];
 
-    // active status filter
+    // Only active rows
     return data.filter(r =>
       r.Status && r.Status.toString().toLowerCase() === "active"
     );
-
   } catch (err) {
     console.error("Fetch failed:", err);
     return [];
   }
-}
-
-// Date parse helper
-function parseDate(dateStr) {
-  if (!dateStr) return null;
-  dateStr = dateStr.toString().trim();
-
-  // yyyy-mm-dd
-  if (dateStr.includes("-")) {
-    const p = dateStr.split("-");
-    if (p.length !== 3) return null;
-    return new Date(p[0], p[1]-1, p[2]);
-  }
-
-  // mm/dd/yyyy
-  if (dateStr.includes("/")) {
-    const p = dateStr.split("/");
-    if (p.length !== 3) return null;
-    return new Date(p[2], p[0]-1, p[1]);
-  }
-
-  return null;
 }
 
 // Render notices
@@ -339,45 +315,51 @@ async function renderNotices() {
   const today = new Date();
   today.setHours(0,0,0,0);
 
-  // filter future notices
+  // Safe filter: Event Date missing/invalid হলে দেখাও
   const filtered = notices.filter(n => {
-    const noticeDate = parseDate(n["Event Date"]);
-    if (!noticeDate) return false;
+    if(!n["Event Date"]) return true; // date missing হলে দেখাও
+    const noticeDate = new Date(n["Event Date"]);
+    if (isNaN(noticeDate)) return true; // invalid date হলে দেখাও
     noticeDate.setHours(0,0,0,0);
     return noticeDate >= today;
   });
 
-  // pinned first, then by date
+  // Pinned first, then by date
   filtered.sort((a,b) => {
-    const pinA = a.Pin ? a.Pin.toLowerCase() : "";
-    const pinB = b.Pin ? b.Pin.toLowerCase() : "";
+    const pinA = (a.Pin || "").toLowerCase();
+    const pinB = (b.Pin || "").toLowerCase();
+    if(pinA==="yes" && pinB!=="yes") return -1;
+    if(pinA!=="yes" && pinB==="yes") return 1;
 
-    if (pinA === "yes" && pinB !== "yes") return -1;
-    if (pinA !== "yes" && pinB === "yes") return 1;
-
-    const dateA = parseDate(a["Event Date"]);
-    const dateB = parseDate(b["Event Date"]);
+    const dateA = a["Event Date"] ? new Date(a["Event Date"]) : new Date(0);
+    const dateB = b["Event Date"] ? new Date(b["Event Date"]) : new Date(0);
     return dateA - dateB;
   });
 
-  if (filtered.length === 0) {
+  if(filtered.length === 0){
     container.innerHTML = "<p>বর্তমানে কোনো নোটিশ নেই</p>";
     return;
   }
 
-  filtered.forEach(n => {
-    const pinValue = n.Pin ? n.Pin.toLowerCase() : "";
-    const pinnedStyle = pinValue === "yes"
-      ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;"
+  filtered.forEach(n=>{
+    const pinnedStyle = (n.Pin || "").toLowerCase() === "yes"
+      ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" 
       : "padding:10px;margin-bottom:12px;";
 
-    container.innerHTML += `
-      <div style="${pinnedStyle}">
-        <h3>${n.Title || ""}</h3>
-        <p>📅 ${n["Event Date"] || ""}</p>
-        <p>${n.Description || ""}</p>
+    const media = `
+      <div class="notice-media">
         ${n.Image ? `<img src="${n.Image}" style="max-width:150px;margin-top:5px;">` : ""}
-        ${n.PDF ? `<br><a href="${n.PDF}" target="_blank">PDF দেখুন</a>` : ""}
+        ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
+      </div>
+    `;
+
+    container.innerHTML += `
+      <div class="notice-card" style="${pinnedStyle}">
+        <div class="notice-title">${n.Title || ""}</div>
+        <div class="notice-date">📅 ${n["Event Date"] || ""}</div>
+        <div class="notice-category">${n.Category || ""}</div>
+        <div class="notice-desc">${n.Description || ""}</div>
+        ${media}
       </div>
     `;
   });
@@ -387,38 +369,7 @@ async function renderNotices() {
 document.addEventListener("DOMContentLoaded", renderNotices);
 </script>
 
+
    
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
