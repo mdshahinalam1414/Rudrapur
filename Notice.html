@@ -332,16 +332,24 @@ async function renderAccounts() {
 /* ===== RENDER NOTICE ===== */
 async function renderNotices() {
   const notices = await fetchSheet("Notice");
-  const today = new Date().toISOString().split("T")[0];
+  console.log("Fetched notices:", notices);
+
+  const today = new Date();
   const container = document.getElementById("Notice");
   container.innerHTML = "";
 
-  let filtered = notices.filter(n => n.EventDate >= today);
+  // Filter: only active notices with valid EventDate >= today
+  let filtered = notices.filter(n => {
+    if(!n.EventDate) return false; // যদি date খালি থাকে
+    const noticeDate = new Date(n.EventDate);
+    return noticeDate >= today;
+  });
 
-  filtered.sort((a,b) => {
+  // Sort pinned first, then by date
+  filtered.sort((a, b) => {
     if(a.Pin === "yes" && b.Pin !== "yes") return -1;
     if(a.Pin !== "yes" && b.Pin === "yes") return 1;
-    return a.EventDate.localeCompare(b.EventDate);
+    return new Date(a.EventDate) - new Date(b.EventDate);
   });
 
   if(filtered.length === 0) {
@@ -349,11 +357,12 @@ async function renderNotices() {
     return;
   }
 
+  // Render notices
   filtered.forEach(n => {
     const pinnedStyle = n.Pin === "yes" ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" : "";
     const media = `
       <div class="notice-media">
-        ${n.Image ? `<img src="${n.Image}">` : ""}
+        ${n.Image ? `<img src="${n.Image}" alt="Notice Image">` : ""}
         ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
       </div>
     `;
@@ -368,6 +377,7 @@ async function renderNotices() {
     `;
   });
 }
+
 
 /* ===== RENDER JOBS ===== */
 async function renderJobs() {
@@ -427,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 </body>
 </html>
+
 
 
 
