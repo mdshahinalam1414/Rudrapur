@@ -233,7 +233,7 @@ footer a{
   <a href="Jobs.html">Jobs</a>
   <a href="Accounts.html">Accounts</a>
   <a href="About.html">About</a>
-  <a href="admin.html">Admin Panel</a>
+  <a href="Admin.html">Admin Panel</a>
 </div>
 
 <!-- ===== BANNER ===== -->
@@ -311,44 +311,38 @@ async function renderNotices() {
   const today = new Date();
   today.setHours(0,0,0,0); // শুধু date compare
 
+  // ===== FILTER FUTURE NOTICES =====
   let filtered = notices.filter(n => {
-    if(!n.EventDate) return false;
+    if (!n.EventDate) return false;
 
-    // extra space remove
-    const dateStr = n.EventDate.toString().trim(); 
+    const noticeDate = new Date(n.EventDate.toString().trim());
+    if (isNaN(noticeDate)) return false;
 
-    // yyyy-mm-dd থেকে date object বানানো
-    const parts = dateStr.split("-");
-    if(parts.length !== 3) return false;
-
-    const noticeDate = new Date(parts[0], parts[1]-1, parts[2]);
     noticeDate.setHours(0,0,0,0);
-
     return noticeDate >= today;
   });
 
-  // pinned notices আগে
-  filtered.sort((a,b) => {
-    if(a.Pin === "yes" && b.Pin !== "yes") return -1;
-    if(a.Pin !== "yes" && b.Pin === "yes") return 1;
+  // ===== PINNED FIRST & SORT BY DATE =====
+  filtered.sort((a, b) => {
+    if (a.Pin === "yes" && b.Pin !== "yes") return -1;
+    if (a.Pin !== "yes" && b.Pin === "yes") return 1;
 
-    const aParts = a.EventDate.toString().trim().split("-");
-    const bParts = b.EventDate.toString().trim().split("-");
-    const aDate = new Date(aParts[0], aParts[1]-1, aParts[2]);
-    const bDate = new Date(bParts[0], bParts[1]-1, bParts[2]);
-    return aDate - bDate;
+    const dateA = new Date(a.EventDate);
+    const dateB = new Date(b.EventDate);
+    return dateA - dateB;
   });
 
-  if(filtered.length === 0) {
+  if (filtered.length === 0) {
     container.innerHTML = "<p>বর্তমানে কোনো নোটিশ নেই</p>";
     return;
   }
 
+  // ===== RENDER =====
   filtered.forEach(n => {
     const pinnedStyle = n.Pin === "yes" ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;" : "";
     const media = `
       <div class="notice-media">
-        ${n.Image ? `<img src="${n.Image}">` : ""}
+        ${n.Image ? `<img src="${n.Image}" style="max-width:150px;margin-top:5px;">` : ""}
         ${n.PDF ? `<a href="${n.PDF}" target="_blank" class="pdf-link">PDF দেখুন</a>` : ""}
       </div>
     `;
@@ -366,16 +360,13 @@ async function renderNotices() {
 
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", () => {
-  if(document.getElementById("Notice")) renderNotices();
+  if (document.getElementById("Notice")) renderNotices();
 });
 </script>
-
- 
-
-
-  
+   
 </body>
 </html>
+
 
 
 
