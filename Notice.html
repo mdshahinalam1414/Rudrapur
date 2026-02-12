@@ -281,9 +281,10 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 </script>
   
 <script>
-const API = "https://script.google.com/macros/s/AKfycbz-ZTwXpYRBFwhgRWgcewEODtnQOC_qUYviQs6OIYaUUhdyh-yzUg1HlK33B6CPk4gQ/exec";
+// ✅ তোমার Web App API URL এখানে বসাও
+const API = "https://script.google.com/macros/s/AKfycbzHVEmsjVoyj46mdaAjS6r8uWgbojWXxUtO8fn6YCuXsqZ1wr7dYVUDAGJ5YBbdAxFr6w/exec";
 
-// ✅ GET ব্যবহার করে fetch
+// GET দিয়ে fetch
 async function fetchSheet(sheetName) {
   try {
     const res = await fetch(`${API}?sheet=${encodeURIComponent(sheetName)}`);
@@ -338,7 +339,7 @@ async function renderNotices() {
   today.setHours(0,0,0,0);
 
   // filter future notices
-  let filtered = notices.filter(n => {
+  const filtered = notices.filter(n => {
     const noticeDate = parseDate(n["Event Date"]);
     if (!noticeDate) return false;
     noticeDate.setHours(0,0,0,0);
@@ -384,9 +385,11 @@ async function renderNotices() {
 // Auto render on DOM load
 document.addEventListener("DOMContentLoaded", renderNotices);
 </script>
+
    
 </body>
 </html>
+
 
 
 
