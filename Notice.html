@@ -283,18 +283,17 @@ setInterval(()=>{ i=(i+1)%imgs.length; bannerImg.src=imgs[i]; },4000);
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxlQERtKM6nWCbliYoI8geGWGLSlpeEyPBuAGNYB8aYAcTByRvlc3n7sqmBhj8Rm6pGBw/exec";
 
+// ✅ GET ব্যবহার করে fetch
 async function fetchSheet(sheetName) {
   try {
-    const res = await fetch(API, {
-      method: "POST",
-      body: JSON.stringify({ action: "fetch", sheet: Notice })
-    });
-
+    const res = await fetch(`${API}?sheet=${encodeURIComponent(sheetName)}`);
     const data = await res.json();
 
-    return data.filter(r =>
-      r.Status && r.Status.toString().toLowerCase() === "active"
-    );
+    return Array.isArray(data)
+      ? data.filter(r =>
+          r.Status && r.Status.toString().toLowerCase() === "active"
+        )
+      : [];
 
   } catch (err) {
     console.error("Fetch failed:", err);
@@ -302,6 +301,7 @@ async function fetchSheet(sheetName) {
   }
 }
 
+// Date parse helper
 function parseDate(dateStr) {
   if (!dateStr) return null;
 
@@ -320,29 +320,27 @@ function parseDate(dateStr) {
   return null;
 }
 
+// Render notices
 async function renderNotices() {
-
   const notices = await fetchSheet("Notice");
   console.log("Fetched notices:", notices);
 
   const container = document.getElementById("Notice");
   if (!container) return;
-
   container.innerHTML = "";
 
   const today = new Date();
   today.setHours(0,0,0,0);
 
   let filtered = notices.filter(n => {
-    const noticeDate = parseDate(n["Event Date"]); // ✅ FIXED HERE
+    const noticeDate = parseDate(n["Event Date"]);
     if (!noticeDate) return false;
-
     noticeDate.setHours(0,0,0,0);
     return noticeDate >= today;
   });
 
+  // pinned first, then by date
   filtered.sort((a,b) => {
-
     const pinA = a.Pin ? a.Pin.toLowerCase() : "";
     const pinB = b.Pin ? b.Pin.toLowerCase() : "";
 
@@ -352,15 +350,13 @@ async function renderNotices() {
     return parseDate(a["Event Date"]) - parseDate(b["Event Date"]);
   });
 
-  if (filtered.length === 0) {
+  if(filtered.length === 0){
     container.innerHTML = "<p>বর্তমানে কোনো নোটিশ নেই</p>";
     return;
   }
 
   filtered.forEach(n => {
-
     const pinValue = n.Pin ? n.Pin.toLowerCase() : "";
-
     const pinnedStyle = pinValue === "yes"
       ? "border:2px solid #008C44;padding:10px;border-radius:8px;margin-bottom:12px;"
       : "padding:10px;margin-bottom:12px;";
@@ -382,9 +378,11 @@ document.addEventListener("DOMContentLoaded", renderNotices);
 
 
 
+
    
 </body>
 </html>
+
 
 
 
