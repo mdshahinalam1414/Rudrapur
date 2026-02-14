@@ -236,19 +236,21 @@ function render(data){
 }
 
 /* SEARCH */
-search.onkeyup=()=>{
-  let q=search.value.toLowerCase();
-  render(donors.filter(d=>
-    d.name.toLowerCase().includes(q) ||
-    d.address.toLowerCase().includes(q) ||
-    d.phone.includes(q) ||
-    d.blood.toLowerCase().includes(q)
+search.onkeyup = () => {
+  let q = search.value.toLowerCase();
+
+  render(donors.filter(d =>
+    String(d.Name || "").toLowerCase().includes(q) ||
+    String(d.Address || "").toLowerCase().includes(q) ||
+    String(d.Mobile || "").includes(q) ||
+    String(d.Group || "").toLowerCase().includes(q)
   ));
 };
 </script>
 
 </body>
 </html>
+
 
 
 
